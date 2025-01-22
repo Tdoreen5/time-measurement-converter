@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="https://c.s-microsoft.com/favicon.ico?v2" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Time Measurement Converter</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Time Measurement Converter</h1>
+      <p>Convert time between hours, minutes, and seconds:</p>
+
+      <div class="form-group">
+        <label for="timeValue">Enter Time Value:</label>
+        <input type="number" id="timeValue" placeholder="Enter a number" />
+      </div>
+
+      <div class="form-group">
+        <label for="fromUnit">From:</label>
+        <select id="fromUnit">
+          <option value="hours">Hours</option>
+          <option value="minutes">Minutes</option>
+          <option value="seconds">Seconds</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="toUnit">To:</label>
+        <select id="toUnit">
+          <option value="hours">Hours</option>
+          <option value="minutes">Minutes</option>
+          <option value="seconds">Seconds</option>
+        </select>
+      </div>
+
+      <button onclick="convertTime()">Convert</button>
+
+      <h2>Result:</h2>
+      <p id="result">---</p>
+    </div>
+
+    <script>
+      // Conversion function
+      function convertTime() {
+        const timeValue = parseFloat(document.getElementById("timeValue").value);
+        const fromUnit = document.getElementById("fromUnit").value;
+        const toUnit = document.getElementById("toUnit").value;
+        let result;
+
+        if (isNaN(timeValue)) {
+          result = "Please enter a valid number.";
+        } else {
+          const conversionRates = {
+            hours: { minutes: 60, seconds: 3600 },
+            minutes: { hours: 1 / 60, seconds: 60 },
+            seconds: { hours: 1 / 3600, minutes: 1 / 60 },
+          };
+
+          if (fromUnit === toUnit) {
+            result = `${timeValue} ${toUnit}`;
+          } else {
+            result = timeValue * conversionRates[fromUnit][toUnit];
+            result = `${result} ${toUnit}`;
+          }
+        }
+
+        document.getElementById("result").textContent = result;
+      }
+
+      // Register service worker
+      if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .register("/service-worker.js")
+    .then((registration) => {
+      console.log("Service Worker registered with scope:", registration.scope);
+    })
+    .catch((error) => {
+      console.error("Service Worker registration failed:", error);
+    });
+}
+
+    </script>
+  </body>
+</html>
