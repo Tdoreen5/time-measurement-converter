@@ -40,6 +40,8 @@
 
       <h2>Result:</h2>
       <p id="result">---</p>
+
+      <button onclick="downloadResult()" id="downloadBtn" style="display:none;">Download Result</button>
     </div>
 
     <script>
@@ -68,19 +70,71 @@
         }
 
         document.getElementById("result").textContent = result;
+        
+        // Show download button
+        document.getElementById("downloadBtn").style.display = "block";
       }
 
-      // Register service worker
+      // Download result as a text file
+      function downloadResult() {
+        const resultText = document.getElementById("result").textContent;
+        const blob = new Blob([resultText], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "conversion_result.txt";
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      // Register service worker for push notifications
       if ("serviceWorker" in navigator) {
-  navigator.serviceWorker
-    .register("/service-worker.js")
-    .then((registration) => {
-      console.log("Service Worker registered with scope:", registration.scope);
-    })
-    .catch((error) => {
-      console.error("Service Worker registration failed:", error);
-    });
-}
+        navigator.serviceWorker
+          .register("/service-worker.js")
+          .then((registration) => {
+            console.log("Service Worker registered with scope:", registration.scope);
+
+            // Request push notification permission
+            if ("Notification" in window && navigator.serviceWorker) {
+              Notification.requestPermission().then((permission) => {
+                if (permission === "granted") {
+                  subscribeUserToPush(registration);
+                }
+              });
+            }
+          })
+          .catch((error) => {
+            console.error("Service Worker registration failed:", error);
+          });
+      }
+
+      // Subscribe user to push notifications
+      function subscribeUserToPush(registration) {
+        registration.pushManager
+          .subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlB64ToUint8Array("<your_public_vapid_key>"), // Replace with your VAPID public key
+          })
+          .then((subscription) => {
+            console.log("User is subscribed:", subscription);
+            // Here you could send the subscription object to your server to store it
+          })
+          .catch((err) => {
+            console.error("Failed to subscribe the user:", err);
+          });
+      }
+
+      // Helper function to convert VAPID key
+      function urlB64ToUint8Array(base64String) {
+        const padding = "=".repeat((4 - base64String.length % 4) % 4);
+        const base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/");
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+        for (let i = 0; i < rawData.length; ++i) {
+          outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+      }
 
     </script>
   </body>
