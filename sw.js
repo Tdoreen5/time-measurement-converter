@@ -48,3 +48,29 @@ self.addEventListener("fetch", (event) => {
     })
   );
 });
+
+// Push event - Show a notification when a push is received
+self.addEventListener("push", (event) => {
+  let notificationTitle = "Time Measurement Converter";
+  let notificationOptions = {
+    body: event.data ? event.data.text() : "You have a new notification!",
+    icon: "/images/icon-192x192.png", // Set the icon for the notification
+    badge: "/images/badge.png", // Optional: Set a badge for the notification
+  };
+
+  // Show the notification
+  event.waitUntil(
+    self.registration.showNotification(notificationTitle, notificationOptions)
+  );
+});
+
+// Notification click event - Handle user interaction with the notification
+self.addEventListener("notificationclick", (event) => {
+  console.log("[Service Worker] Notification click received:", event);
+  event.notification.close(); // Close the notification
+
+  // Open the app when the notification is clicked
+  event.waitUntil(
+    clients.openWindow("/") // Modify this URL if needed
+  );
+});
