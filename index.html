@@ -59,7 +59,7 @@
   <body>
     <div class="container">
       <h1>Time Measurement Converter</h1>
-      <button class="theme-toggle" onclick="dark/lightTheme()">Dark/Light Theme</button>
+      <button class="theme-toggle" onclick="toggleTheme()">Dark Theme</button>
       <p>Convert time between various units:</p>
 
       <div class="form-group">
@@ -102,18 +102,24 @@
     </div>
 
     <script>
-      // Toggle between light and dark mode
       function toggleTheme() {
         const currentTheme = document.documentElement.getAttribute("data-theme");
         const newTheme = currentTheme === "dark" ? "light" : "dark";
         document.documentElement.setAttribute("data-theme", newTheme);
         localStorage.setItem("theme", newTheme);
+
+        // Update button text
+        const themeButton = document.querySelector(".theme-toggle");
+        themeButton.textContent = newTheme === "dark" ? "Light Theme" : "Dark Theme";
       }
 
-      // Apply saved theme on page load
       document.addEventListener("DOMContentLoaded", () => {
         const savedTheme = localStorage.getItem("theme") || "light";
         document.documentElement.setAttribute("data-theme", savedTheme);
+
+        // Update button text on page load
+        const themeButton = document.querySelector(".theme-toggle");
+        themeButton.textContent = savedTheme === "dark" ? "Light Theme" : "Dark Theme";
       });
 
       function convertTime() {
