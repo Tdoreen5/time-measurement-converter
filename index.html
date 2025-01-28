@@ -166,9 +166,12 @@
         <div class="form-group">
           <label for="addSubtractUnit">Unit:</label>
           <select id="addSubtractUnit">
-            <option value="hours">Hours</option>
+            <option value="seconds">Seconds</option>
             <option value="minutes">Minutes</option>
+            <option value="hours">Hours</option>
             <option value="days">Days</option>
+            <option value="months">Months</option>
+            <option value="years">Years</option>
           </select>
         </div>
         <button onclick="addSubtractTime()">Apply</button>
@@ -255,30 +258,29 @@
 
       // Add/Subtract Time Logic
       function addSubtractTime() {
-  const operation = document.getElementById('operation').value;
-  const value = document.getElementById('addSubtractValue').value;
-  const unit = document.getElementById('addSubtractUnit').value;
-  const modifiedDate = new Date();
+        const operation = document.getElementById('operation').value;
+        const value = document.getElementById('addSubtractValue').value;
+        const unit = document.getElementById('addSubtractUnit').value;
+        const modifiedDate = new Date();
 
-  if (operation === 'add') {
-    if (unit === 'seconds') modifiedDate.setSeconds(modifiedDate.getSeconds() + parseInt(value));
-    else if (unit === 'minutes') modifiedDate.setMinutes(modifiedDate.getMinutes() + parseInt(value));
-    else if (unit === 'hours') modifiedDate.setHours(modifiedDate.getHours() + parseInt(value));
-    else if (unit === 'days') modifiedDate.setDate(modifiedDate.getDate() + parseInt(value));
-    else if (unit === 'months') modifiedDate.setMonth(modifiedDate.getMonth() + parseInt(value));
-    else if (unit === 'years') modifiedDate.setFullYear(modifiedDate.getFullYear() + parseInt(value));
-  } else if (operation === 'subtract') {
-    if (unit === 'seconds') modifiedDate.setSeconds(modifiedDate.getSeconds() - parseInt(value));
-    else if (unit === 'minutes') modifiedDate.setMinutes(modifiedDate.getMinutes() - parseInt(value));
-    else if (unit === 'hours') modifiedDate.setHours(modifiedDate.getHours() - parseInt(value));
-    else if (unit === 'days') modifiedDate.setDate(modifiedDate.getDate() - parseInt(value));
-    else if (unit === 'months') modifiedDate.setMonth(modifiedDate.getMonth() - parseInt(value));
-    else if (unit === 'years') modifiedDate.setFullYear(modifiedDate.getFullYear() - parseInt(value));
-  }
+        if (operation === 'add') {
+          if (unit === 'seconds') modifiedDate.setSeconds(modifiedDate.getSeconds() + parseInt(value));
+          else if (unit === 'minutes') modifiedDate.setMinutes(modifiedDate.getMinutes() + parseInt(value));
+          else if (unit === 'hours') modifiedDate.setHours(modifiedDate.getHours() + parseInt(value));
+          else if (unit === 'days') modifiedDate.setDate(modifiedDate.getDate() + parseInt(value));
+          else if (unit === 'months') modifiedDate.setMonth(modifiedDate.getMonth() + parseInt(value));
+          else if (unit === 'years') modifiedDate.setFullYear(modifiedDate.getFullYear() + parseInt(value));
+        } else if (operation === 'subtract') {
+          if (unit === 'seconds') modifiedDate.setSeconds(modifiedDate.getSeconds() - parseInt(value));
+          else if (unit === 'minutes') modifiedDate.setMinutes(modifiedDate.getMinutes() - parseInt(value));
+          else if (unit === 'hours') modifiedDate.setHours(modifiedDate.getHours() - parseInt(value));
+          else if (unit === 'days') modifiedDate.setDate(modifiedDate.getDate() - parseInt(value));
+          else if (unit === 'months') modifiedDate.setMonth(modifiedDate.getMonth() - parseInt(value));
+          else if (unit === 'years') modifiedDate.setFullYear(modifiedDate.getFullYear() - parseInt(value));
+        }
 
-  document.getElementById('modifiedDate').textContent = `Modified Date: ${modifiedDate}`;
-}
-
+        document.getElementById('modifiedDate').textContent = `Modified Date: ${modifiedDate}`;
+      }
 
       // Calculate Time Since Event
       function calculateTimeSinceEvent() {
