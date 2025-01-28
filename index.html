@@ -320,8 +320,13 @@
         const eventDateObj = new Date(eventDate);
         const now = new Date();
         const countdown = eventDateObj - now;
-        const days = Math.floor(countdown / (1000 * 60 * 60 * 24));
-        document.getElementById('countdown').textContent = `Countdown: ${days} days remaining.`;
+
+        if (countdown < 0) {
+          document.getElementById('countdown').textContent = "Time Event has already passed";
+        } else {
+          const days = Math.floor(countdown / (1000 * 60 * 60 * 24));
+          document.getElementById('countdown').textContent = `Countdown: ${days} days remaining.`;
+        }
       }
     </script>
   </body>
