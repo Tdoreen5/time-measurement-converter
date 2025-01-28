@@ -92,6 +92,9 @@
       <button class="theme-toggle" onclick="toggleTheme()">Dark Theme</button>
       <p>Convert time between various units:</p>
 
+      <!-- Time conversion section -->
+
+      <!-- Countdown to event section -->
       <div class="panel">
         <h3>Calculate Time Since Event</h3>
         <div class="form-group">
@@ -100,8 +103,8 @@
         </div>
 
         <div class="form-group">
-          <label for="unit">Select Unit:</label>
-          <select id="unit">
+          <label for="unitSelection">Select Unit for Time Difference:</label>
+          <select id="unitSelection">
             <option value="seconds">Seconds</option>
             <option value="minutes">Minutes</option>
             <option value="hours">Hours</option>
@@ -111,9 +114,10 @@
           </select>
         </div>
 
-        <button onclick="calculateTimeSinceEvent()">Calculate Time</button>
-        <p id="eventTimeResult"></p>
+        <button onclick="calculateTimeSinceEvent()">Calculate</button>
+        <p id="timeSinceEventResult">---</p>
       </div>
+
     </div>
 
     <script>
@@ -130,46 +134,50 @@
 
       function calculateTimeSinceEvent() {
         const eventDate = document.getElementById("eventDate").value;
-        const unit = document.getElementById("unit").value;
+        const unitSelection = document.getElementById("unitSelection").value;
 
         if (!eventDate) {
-          document.getElementById("eventTimeResult").textContent = "Please enter a valid event date.";
+          document.getElementById("timeSinceEventResult").textContent = "Please enter an event date.";
           return;
         }
 
         const eventDateObj = new Date(eventDate);
-        const currentDate = new Date();
-        const timeDiff = currentDate - eventDateObj;
+        const now = new Date();
+        const timeDiff = now - eventDateObj;
 
         if (timeDiff < 0) {
-          document.getElementById("eventTimeResult").textContent = "The event date is in the future!";
+          document.getElementById("timeSinceEventResult").textContent = "The event is in the future!";
           return;
         }
 
-        let result = "";
-        switch (unit) {
+        let result;
+
+        switch (unitSelection) {
           case "seconds":
-            result = `${Math.floor(timeDiff / 1000)} seconds`;
+            result = Math.floor(timeDiff / 1000);
             break;
           case "minutes":
-            result = `${Math.floor(timeDiff / (1000 * 60))} minutes`;
+            result = Math.floor(timeDiff / (1000 * 60));
             break;
           case "hours":
-            result = `${Math.floor(timeDiff / (1000 * 60 * 60))} hours`;
+            result = Math.floor(timeDiff / (1000 * 60 * 60));
             break;
           case "days":
-            result = `${Math.floor(timeDiff / (1000 * 60 * 60 * 24))} days`;
+            result = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
             break;
           case "months":
-            const months = (currentDate.getFullYear() - eventDateObj.getFullYear()) * 12 + currentDate.getMonth() - eventDateObj.getMonth();
-            result = `${months} months`;
+            const months = (now.getFullYear() - eventDateObj.getFullYear()) * 12 + now.getMonth() - eventDateObj.getMonth();
+            result = months;
             break;
           case "years":
-            result = `${currentDate.getFullYear() - eventDateObj.getFullYear()} years`;
+            result = now.getFullYear() - eventDateObj.getFullYear();
+            break;
+          default:
+            result = "Invalid unit selected!";
             break;
         }
 
-        document.getElementById("eventTimeResult").textContent = `Time since event: ${result}`;
+        document.getElementById("timeSinceEventResult").textContent = `Time since event: ${result} ${unitSelection}`;
       }
     </script>
   </body>
