@@ -54,6 +54,36 @@
         float: right;
         margin-top: -40px;
       }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      input, select {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        margin-top: 5px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+      }
+
+      .panel {
+        margin-top: 30px;
+      }
+
+      .countdown {
+        margin-top: 20px;
+        font-size: 18px;
+        font-weight: bold;
+      }
     </style>
   </head>
   <body>
@@ -99,6 +129,51 @@
       <p id="result">---</p>
 
       <button onclick="downloadResult()" id="downloadBtn" style="display:none;">Download Result</button>
+
+      <div class="panel">
+        <h3>Add or Subtract Time</h3>
+        <div class="form-group">
+          <label for="operation">Operation:</label>
+          <select id="operation">
+            <option value="add">Add</option>
+            <option value="subtract">Subtract</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="addSubtractValue">Amount:</label>
+          <input type="number" id="addSubtractValue" placeholder="Enter number" />
+        </div>
+        <div class="form-group">
+          <label for="addSubtractUnit">Unit:</label>
+          <select id="addSubtractUnit">
+            <option value="hours">Hours</option>
+            <option value="minutes">Minutes</option>
+            <option value="days">Days</option>
+          </select>
+        </div>
+        <button onclick="addSubtractTime()">Apply</button>
+        <p id="modifiedDate"></p>
+      </div>
+
+      <div class="panel">
+        <h3>Calculate Seconds Since Birth</h3>
+        <div class="form-group">
+          <label for="dob">Enter Date of Birth:</label>
+          <input type="date" id="dob" />
+        </div>
+        <button onclick="calculateSecondsSinceBirth()">Calculate</button>
+        <p id="secondsSinceBirth"></p>
+      </div>
+
+      <div class="panel">
+        <h3>Countdown to Event</h3>
+        <div class="form-group">
+          <label for="eventDate">Enter Event Date:</label>
+          <input type="datetime-local" id="eventDate" />
+        </div>
+        <button onclick="countdownToEvent()">Start Countdown</button>
+        <p id="countdown"></p>
+      </div>
     </div>
 
     <script>
@@ -112,15 +187,6 @@
         const themeButton = document.querySelector(".theme-toggle");
         themeButton.textContent = newTheme === "dark" ? "Light Theme" : "Dark Theme";
       }
-
-      document.addEventListener("DOMContentLoaded", () => {
-        const savedTheme = localStorage.getItem("theme") || "light";
-        document.documentElement.setAttribute("data-theme", savedTheme);
-
-        // Update button text on page load
-        const themeButton = document.querySelector(".theme-toggle");
-        themeButton.textContent = savedTheme === "dark" ? "Light Theme" : "Dark Theme";
-      });
 
       function convertTime() {
         const timeValue = parseFloat(document.getElementById("timeValue").value);
@@ -163,6 +229,35 @@
         a.click();
         URL.revokeObjectURL(url);
       }
-    </script>
-  </body>
-</html>
+
+      function addSubtractTime() {
+        const value = parseInt(document.getElementById("addSubtractValue").value);
+        const unit = document.getElementById("addSubtractUnit").value;
+        const operation = document.getElementById("operation").value;
+        let date = new Date();
+
+        if (operation === "add") {
+          if (unit === "hours") date.setHours(date.getHours() + value);
+          else if (unit === "minutes") date.setMinutes(date.getMinutes() + value);
+          else if (unit === "days") date.setDate(date.getDate() + value);
+        } else if (operation === "subtract") {
+          if (unit === "hours") date.setHours(date.getHours() - value);
+          else if (unit === "minutes") date.setMinutes(date.getMinutes() - value);
+          else if (unit === "days") date.setDate(date.getDate() - value);
+        }
+
+        document.getElementById("modifiedDate").textContent = `Modified Date: ${date.toLocaleString()}`;
+      }
+
+      function calculateSecondsSinceBirth() {
+        const dob = document.getElementById("dob").value;
+        if (!dob) return;
+
+        const birthDate = new Date(dob);
+        const now = new Date();
+        const secondsSinceBirth = Math.floor((now - birthDate) / 1000);
+
+        document.getElementById("secondsSinceBirth").textContent = `Seconds since birth: ${secondsSinceBirth}`;
+      }
+
+      function countdownToEvent() {
