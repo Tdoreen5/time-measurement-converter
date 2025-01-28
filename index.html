@@ -7,11 +7,60 @@
     <link rel="manifest" href="/manifest.json" />
     <link rel="stylesheet" href="styles.css" />
     <title>Time Measurement Converter</title>
+    <style>
+      :root {
+        --bg-color: #ffffff;
+        --text-color: #000000;
+        --button-bg: #007bff;
+        --button-text: #ffffff;
+      }
+
+      [data-theme="dark"] {
+        --bg-color: #121212;
+        --text-color: #ffffff;
+        --button-bg: #0d6efd;
+        --button-text: #ffffff;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        padding: 20px;
+        max-width: 600px;
+        margin: auto;
+      }
+
+      button {
+        background-color: var(--button-bg);
+        color: var(--button-text);
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+
+      button:hover {
+        opacity: 0.9;
+      }
+
+      .theme-toggle {
+        float: right;
+        margin-top: -40px;
+      }
+    </style>
   </head>
   <body>
     <div class="container">
       <h1>Time Measurement Converter</h1>
-      <p>Convert time between hours, minutes, and seconds:</p>
+      <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+      <p>Convert time between various units:</p>
 
       <div class="form-group">
         <label for="timeValue">Enter Time Value:</label>
@@ -21,18 +70,26 @@
       <div class="form-group">
         <label for="fromUnit">From:</label>
         <select id="fromUnit">
-          <option value="hours">Hours</option>
-          <option value="minutes">Minutes</option>
           <option value="seconds">Seconds</option>
+          <option value="minutes">Minutes</option>
+          <option value="hours">Hours</option>
+          <option value="days">Days</option>
+          <option value="weeks">Weeks</option>
+          <option value="months">Months</option>
+          <option value="years">Years</option>
         </select>
       </div>
 
       <div class="form-group">
         <label for="toUnit">To:</label>
         <select id="toUnit">
-          <option value="hours">Hours</option>
-          <option value="minutes">Minutes</option>
           <option value="seconds">Seconds</option>
+          <option value="minutes">Minutes</option>
+          <option value="hours">Hours</option>
+          <option value="days">Days</option>
+          <option value="weeks">Weeks</option>
+          <option value="months">Months</option>
+          <option value="years">Years</option>
         </select>
       </div>
 
@@ -45,7 +102,20 @@
     </div>
 
     <script>
-      // Conversion function
+      // Toggle between light and dark mode
+      function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+      }
+
+      // Apply saved theme on page load
+      document.addEventListener("DOMContentLoaded", () => {
+        const savedTheme = localStorage.getItem("theme") || "light";
+        document.documentElement.setAttribute("data-theme", savedTheme);
+      });
+
       function convertTime() {
         const timeValue = parseFloat(document.getElementById("timeValue").value);
         const fromUnit = document.getElementById("fromUnit").value;
@@ -56,26 +126,27 @@
           result = "Please enter a valid number.";
         } else {
           const conversionRates = {
-            hours: { minutes: 60, seconds: 3600 },
-            minutes: { hours: 1 / 60, seconds: 60 },
-            seconds: { hours: 1 / 3600, minutes: 1 / 60 },
+            seconds: { minutes: 1 / 60, hours: 1 / 3600, days: 1 / 86400, weeks: 1 / 604800, months: 1 / 2592000, years: 1 / 31536000 },
+            minutes: { seconds: 60, hours: 1 / 60, days: 1 / 1440, weeks: 1 / 10080, months: 1 / 43200, years: 1 / 525600 },
+            hours: { seconds: 3600, minutes: 60, days: 1 / 24, weeks: 1 / 168, months: 1 / 720, years: 1 / 8760 },
+            days: { seconds: 86400, minutes: 1440, hours: 24, weeks: 1 / 7, months: 1 / 30.44, years: 1 / 365 },
+            weeks: { seconds: 604800, minutes: 10080, hours: 168, days: 7, months: 1 / 4.348, years: 1 / 52.143 },
+            months: { seconds: 2592000, minutes: 43200, hours: 720, days: 30.44, weeks: 4.348, years: 1 / 12 },
+            years: { seconds: 31536000, minutes: 525600, hours: 8760, days: 365, weeks: 52.143, months: 12 }
           };
 
           if (fromUnit === toUnit) {
             result = `${timeValue} ${toUnit}`;
           } else {
             result = timeValue * conversionRates[fromUnit][toUnit];
-            result = `${result} ${toUnit}`;
+            result = `${result.toFixed(6)} ${toUnit}`;
           }
         }
 
         document.getElementById("result").textContent = result;
-        
-        // Show download button
         document.getElementById("downloadBtn").style.display = "block";
       }
 
-      // Download result as a text file
       function downloadResult() {
         const resultText = document.getElementById("result").textContent;
         const blob = new Blob([resultText], { type: 'text/plain' });
@@ -86,56 +157,6 @@
         a.click();
         URL.revokeObjectURL(url);
       }
-
-      // Register service worker for push notifications
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker
-          .register("/service-worker.js")
-          .then((registration) => {
-            console.log("Service Worker registered with scope:", registration.scope);
-
-            // Request push notification permission
-            if ("Notification" in window && navigator.serviceWorker) {
-              Notification.requestPermission().then((permission) => {
-                if (permission === "granted") {
-                  subscribeUserToPush(registration);
-                }
-              });
-            }
-          })
-          .catch((error) => {
-            console.error("Service Worker registration failed:", error);
-          });
-      }
-
-      // Subscribe user to push notifications
-      function subscribeUserToPush(registration) {
-        registration.pushManager
-          .subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: urlB64ToUint8Array("<your_public_vapid_key>"), // Replace with your VAPID public key
-          })
-          .then((subscription) => {
-            console.log("User is subscribed:", subscription);
-            // Here you could send the subscription object to your server to store it
-          })
-          .catch((err) => {
-            console.error("Failed to subscribe the user:", err);
-          });
-      }
-
-      // Helper function to convert VAPID key
-      function urlB64ToUint8Array(base64String) {
-        const padding = "=".repeat((4 - base64String.length % 4) % 4);
-        const base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/");
-        const rawData = window.atob(base64);
-        const outputArray = new Uint8Array(rawData.length);
-        for (let i = 0; i < rawData.length; ++i) {
-          outputArray[i] = rawData.charCodeAt(i);
-        }
-        return outputArray;
-      }
-
     </script>
   </body>
 </html>
