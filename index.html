@@ -208,7 +208,84 @@
     </div>
 
     <script>
-      /* JavaScript functions remain unchanged */
+      let isDarkTheme = false;
+
+      function toggleTheme() {
+        isDarkTheme = !isDarkTheme;
+        document.documentElement.setAttribute('data-theme', isDarkTheme ? 'dark' : 'light');
+        document.querySelector('.theme-toggle').textContent = isDarkTheme ? 'Light Theme' : 'Dark Theme';
+      }
+
+      // Sample functions for demonstration
+      function convertTime() {
+        const timeValue = document.getElementById('timeValue').value;
+        const fromUnit = document.getElementById('fromUnit').value;
+        const toUnit = document.getElementById('toUnit').value;
+        // Conversion logic here (example)
+        const result = `Converted ${timeValue} ${fromUnit} to ${toUnit}.`;
+        document.getElementById('result').textContent = result;
+      }
+
+      function downloadResult() {
+        const resultText = document.getElementById('result').textContent;
+        const blob = new Blob([resultText], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'conversion-result.txt';
+        link.click();
+      }
+
+      function addSubtractTime() {
+        const operation = document.getElementById('operation').value;
+        const value = document.getElementById('addSubtractValue').value;
+        const unit = document.getElementById('addSubtractUnit').value;
+        const modifiedDate = new Date();
+        if (operation === 'add') {
+          modifiedDate.setHours(modifiedDate.getHours() + parseInt(value));
+        } else if (operation === 'subtract') {
+          modifiedDate.setHours(modifiedDate.getHours() - parseInt(value));
+        }
+        document.getElementById('modifiedDate').textContent = `Modified Date: ${modifiedDate}`;
+      }
+
+      function calculateTimeSinceEvent() {
+        const eventDate = document.getElementById('eventDate').value;
+        const eventUnit = document.getElementById('eventUnit').value;
+        const eventDateObj = new Date(eventDate);
+        const now = new Date();
+        const diff = now - eventDateObj;
+        let result;
+        switch (eventUnit) {
+          case 'seconds':
+            result = Math.floor(diff / 1000);
+            break;
+          case 'minutes':
+            result = Math.floor(diff / (1000 * 60));
+            break;
+          case 'hours':
+            result = Math.floor(diff / (1000 * 60 * 60));
+            break;
+          case 'days':
+            result = Math.floor(diff / (1000 * 60 * 60 * 24));
+            break;
+          case 'months':
+            result = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
+            break;
+          case 'years':
+            result = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
+            break;
+        }
+        document.getElementById('timeSinceEvent').textContent = `Time since event: ${result} ${eventUnit}.`;
+      }
+
+      function countdownToEvent() {
+        const eventDate = document.getElementById('eventDateCountdown').value;
+        const eventDateObj = new Date(eventDate);
+        const now = new Date();
+        const countdown = eventDateObj - now;
+        const days = Math.floor(countdown / (1000 * 60 * 60 * 24));
+        document.getElementById('countdown').textContent = `Countdown: ${days} days remaining.`;
+      }
     </script>
   </body>
 </html>
