@@ -52,13 +52,17 @@ body {
   max-width: 420px;
   text-align: center;
   transition: background-color 0.3s, color 0.3s;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 /* Heading Styles */
 h1 {
   color: var(--heading-color);
   font-size: 1.8em;
-  margin-bottom: 20px;
+  margin-top: 0; /* Remove top margin */
+  margin-bottom: 20px; /* Add space below title */
 }
 
 /* Paragraph Styles */
