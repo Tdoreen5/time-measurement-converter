@@ -1,33 +1,83 @@
-<!-- history.html -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Conversion History</title>
-  <link rel="stylesheet" href="styles.css"> <!-- Link your CSS -->
-</head>
-<body>
-  <header>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="history.html">History</a></li>
-      </ul>
-    </nav>
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conversion History</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
 
-  <main>
+      h1 {
+        text-align: center;
+      }
+
+      .history-item {
+        background-color: #f9f9f9;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+      }
+
+      .history-item h2 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .history-item p {
+        margin: 5px 0;
+        font-size: 16px;
+      }
+
+      .back-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 16px;
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      .back-btn:hover {
+        opacity: 0.9;
+      }
+    </style>
+  </head>
+  <body>
     <h1>Conversion History</h1>
-    <div id="historyContainer">
-      <!-- Conversion history will be displayed here -->
-    </div>
-  </main>
+    <div id="historyContainer"></div>
+    <a href="index.html" class="back-btn">Back to Converter</a>
 
-  <footer>
-    <p>&copy; 2025 Your App</p>
-  </footer>
+    <script>
+      // Fetch and display the conversion history from localStorage
+      window.onload = function () {
+        const conversionHistory = JSON.parse(localStorage.getItem('conversionHistory')) || [];
 
-  <script src="history.js"></script> <!-- Link your JS file for history page -->
-</body>
+        const historyContainer = document.getElementById('historyContainer');
+        
+        if (conversionHistory.length === 0) {
+          historyContainer.innerHTML = '<p>No history available.</p>';
+        } else {
+          conversionHistory.forEach(conversion => {
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+
+            historyItem.innerHTML = `
+              <h2>${conversion.timeValue} ${conversion.fromUnit} → ${conversion.toUnit}</h2>
+              <p><strong>Result:</strong> ${conversion.result}</p>
+              <p><strong>Conversion Date:</strong> ${conversion.date}</p>
+            `;
+
+            historyContainer.appendChild(historyItem);
+          });
+        }
+      };
+    </script>
+  </body>
 </html>
