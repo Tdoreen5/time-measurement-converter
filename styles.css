@@ -1,122 +1,156 @@
+/* Root Variables */
+:root {
+  --bg-color: #0482a2f4;
+  --container-bg: #d7ce49c3;
+  --text-color: #a50d0d;
+  --heading-color: #bf1082;
+  --label-color: #080707;
+  --input-bg: #ffffff;
+  --input-border: #ccc;
+  --button-bg: #4CAF50;
+  --button-hover-bg: #45a049;
+  --button-active-bg: #3e8e41;
+  --result-color: #080707;
+}
+
+/* Dark Theme Variables */
+[data-theme="dark"] {
+  --bg-color: #121212;
+  --container-bg: #1f1f1f;
+  --text-color: #f1f1f1;
+  --heading-color: #ff79c6;
+  --label-color: #f1f1f1;
+  --input-bg: #292929;
+  --input-border: #555555;
+  --button-bg: #6272a4;
+  --button-hover-bg: #7084c1;
+  --button-active-bg: #4d5a92;
+  --result-color: #f8f8f2;
+}
+
 /* General Styles */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #0482a2f4;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    color: #a50d0d;
-  }
-  
-  /* Main Container */
+  font-family: 'Arial', sans-serif;
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Main Container */
+.container {
+  background-color: var(--container-bg);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Heading Styles */
+h1 {
+  color: var(--heading-color);
+  font-size: 1.8em;
+  margin-bottom: 20px;
+}
+
+/* Paragraph Styles */
+p {
+  font-size: 16px;
+  color: var(--text-color);
+  margin-bottom: 20px;
+}
+
+/* Form Group */
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* Label Styles */
+label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 8px;
+  color: var(--label-color);
+}
+
+/* Input and Select Fields */
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: 1px solid var(--input-border);
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  box-sizing: border-box;
+  transition: border-color 0.3s, background-color 0.3s, color 0.3s, box-shadow 0.3s;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--button-bg);
+  box-shadow: 0 0 12px rgba(76, 175, 80, 0.4);
+  outline: none;
+}
+
+/* Button Styles */
+button {
+  background-color: var(--button-bg);
+  color: white;
+  font-size: 16px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+  background-color: var(--button-hover-bg);
+  transform: scale(1.02);
+}
+
+button:active {
+  background-color: var(--button-active-bg);
+}
+
+/* Result Section */
+#result {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: var(--result-color);
+  margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
   .container {
-    background-color: #d7ce49c3;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    max-width: 420px;
-    text-align: center;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
-  
-  /* Heading Styles */
+
   h1 {
-    color: #bf1082;
-    font-size: 1.8em;
-    margin-bottom: 20px;
+    font-size: 1.5em;
   }
-  
-  p {
-    font-size: 16px;
-    color: #080707;
-    margin-bottom: 20px;
-  }
-  
-  /* Form Group */
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  /* Label Styles */
-  label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 8px;
-    color: #080707;
-  }
-  
-  /* Input and Select Fields */
+
   input,
-  select {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    margin-top: 5px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-    transition: border-color 0.3s, box-shadow 0.3s;
-  }
-  
-  input:focus,
-  select:focus {
-    border-color: #4CAF50;
-    box-shadow: 0 0 12px rgba(76, 175, 80, 0.4);
-    outline: none;
-  }
-  
-  /* Button Styles */
+  select,
   button {
-    background-color: #4CAF50;
-    color: white;
-    font-size: 16px;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    width: 100%;
-    transition: background-color 0.3s, transform 0.2s;
+    font-size: 14px;
   }
-  
-  button:hover {
-    background-color: #45a049;
-    transform: scale(1.02);
-  }
-  
-  button:active {
-    background-color: #3e8e41;
-  }
-  
-  /* Result Section */
+
   #result {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #080707;
-    margin-top: 20px;
+    font-size: 1em;
   }
-  
-  /* Responsive Design */
-  @media (max-width: 480px) {
-    .container {
-      padding: 15px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-  
-    h1 {
-      font-size: 1.5em;
-    }
-  
-    input,
-    select,
-    button {
-      font-size: 14px;
-    }
-  
-    #result {
-      font-size: 1em;
-    }
-  }
-  
+}
