@@ -261,3 +261,24 @@
       }
 
       function countdownToEvent() {
+        const eventDate = document.getElementById("eventDate").value;
+        if (!eventDate) return;
+
+        const eventDateObj = new Date(eventDate);
+        const now = new Date();
+        const timeDiff = eventDateObj - now;
+
+        if (timeDiff > 0) {
+          const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+          document.getElementById("countdown").textContent = `Time left: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+        } else {
+          document.getElementById("countdown").textContent = "The event has passed!";
+        }
+      }
+    </script>
+  </body>
+</html>
