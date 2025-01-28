@@ -216,16 +216,34 @@
         document.querySelector('.theme-toggle').textContent = isDarkTheme ? 'Light Theme' : 'Dark Theme';
       }
 
-      // Sample functions for demonstration
+      // Conversion Logic
       function convertTime() {
         const timeValue = document.getElementById('timeValue').value;
         const fromUnit = document.getElementById('fromUnit').value;
         const toUnit = document.getElementById('toUnit').value;
-        // Conversion logic here (example)
-        const result = `Converted ${timeValue} ${fromUnit} to ${toUnit}.`;
+        let result;
+
+        // Conversion factors (seconds as base unit)
+        const conversionFactors = {
+          seconds: 1,
+          minutes: 60,
+          hours: 3600,
+          days: 86400,
+          weeks: 604800,
+          months: 2629746,  // Average seconds in a month (30.44 days)
+          years: 31556952  // Average seconds in a year
+        };
+
+        // Convert the value to seconds first, then to the target unit
+        const valueInSeconds = timeValue * conversionFactors[fromUnit];
+        const convertedValue = valueInSeconds / conversionFactors[toUnit];
+        result = `${timeValue} ${fromUnit} is equal to ${convertedValue.toFixed(2)} ${toUnit}.`;
+
         document.getElementById('result').textContent = result;
+        document.getElementById('downloadBtn').style.display = 'inline';
       }
 
+      // Download result function
       function downloadResult() {
         const resultText = document.getElementById('result').textContent;
         const blob = new Blob([resultText], { type: 'text/plain' });
@@ -235,19 +253,27 @@
         link.click();
       }
 
+      // Add/Subtract Time Logic
       function addSubtractTime() {
         const operation = document.getElementById('operation').value;
         const value = document.getElementById('addSubtractValue').value;
         const unit = document.getElementById('addSubtractUnit').value;
         const modifiedDate = new Date();
+
         if (operation === 'add') {
-          modifiedDate.setHours(modifiedDate.getHours() + parseInt(value));
+          if (unit === 'hours') modifiedDate.setHours(modifiedDate.getHours() + parseInt(value));
+          else if (unit === 'minutes') modifiedDate.setMinutes(modifiedDate.getMinutes() + parseInt(value));
+          else if (unit === 'days') modifiedDate.setDate(modifiedDate.getDate() + parseInt(value));
         } else if (operation === 'subtract') {
-          modifiedDate.setHours(modifiedDate.getHours() - parseInt(value));
+          if (unit === 'hours') modifiedDate.setHours(modifiedDate.getHours() - parseInt(value));
+          else if (unit === 'minutes') modifiedDate.setMinutes(modifiedDate.getMinutes() - parseInt(value));
+          else if (unit === 'days') modifiedDate.setDate(modifiedDate.getDate() - parseInt(value));
         }
+
         document.getElementById('modifiedDate').textContent = `Modified Date: ${modifiedDate}`;
       }
 
+      // Calculate Time Since Event
       function calculateTimeSinceEvent() {
         const eventDate = document.getElementById('eventDate').value;
         const eventUnit = document.getElementById('eventUnit').value;
@@ -255,6 +281,7 @@
         const now = new Date();
         const diff = now - eventDateObj;
         let result;
+
         switch (eventUnit) {
           case 'seconds':
             result = Math.floor(diff / 1000);
@@ -278,6 +305,7 @@
         document.getElementById('timeSinceEvent').textContent = `Time since event: ${result} ${eventUnit}.`;
       }
 
+      // Countdown to Event
       function countdownToEvent() {
         const eventDate = document.getElementById('eventDateCountdown').value;
         const eventDateObj = new Date(eventDate);
