@@ -1,21 +1,54 @@
-// main.js
-
-// Function to save a new conversion to history
-function saveToHistory(inputValue, fromUnit, toUnit, resultValue) {
-    let history = JSON.parse(localStorage.getItem('conversionHistory')) || [];
-    
+// Store conversion in local storage
+function saveConversionHistory(timeValue, fromUnit, toUnit, result) {
+    const conversionHistory = JSON.parse(localStorage.getItem('conversionHistory')) || [];
     const conversion = {
-      inputValue,
+      timeValue,
       fromUnit,
       toUnit,
-      resultValue,
-      timestamp: new Date().toLocaleString()
+      result,
+      date: new Date().toLocaleString()
     };
-  
-    history.push(conversion);
-    localStorage.setItem('conversionHistory', JSON.stringify(history));
+    conversionHistory.push(conversion);
+    localStorage.setItem('conversionHistory', JSON.stringify(conversionHistory));
   }
   
-  // Example usage: saving a conversion
-  saveToHistory(2, 'hours', 'minutes', 120);
+  // Conversion logic
+  function convertTime() {
+    const timeValue = document.getElementById('timeValue').value;
+    const fromUnit = document.getElementById('fromUnit').value;
+    const toUnit = document.getElementById('toUnit').value;
+    let result;
+  
+    // Conversion factors (seconds as base unit)
+    const conversionFactors = {
+      seconds: 1,
+      minutes: 60,
+      hours: 3600,
+      days: 86400,
+      weeks: 604800,
+      months: 2629746,  // Average seconds in a month (30.44 days)
+      years: 31556952  // Average seconds in a year
+    };
+  
+    // Convert the value to seconds first, then to the target unit
+    const valueInSeconds = timeValue * conversionFactors[fromUnit];
+    const convertedValue = valueInSeconds / conversionFactors[toUnit];
+    result = `${timeValue} ${fromUnit} is equal to ${convertedValue.toFixed(2)} ${toUnit}.`;
+  
+    document.getElementById('result').textContent = result;
+    document.getElementById('downloadBtn').style.display = 'inline';
+  
+    // Save conversion to history
+    saveConversionHistory(timeValue, fromUnit, toUnit, result);
+  }
+  
+  // Download result function
+  function downloadResult() {
+    const resultText = document.getElementById('result').textContent;
+    const blob = new Blob([resultText], { type: 'text/plain' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'conversion-result.txt';
+    link.click();
+  }
   
