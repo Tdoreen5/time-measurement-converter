@@ -1,59 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Time Converter</title>
-    <link rel="stylesheet" href="styles.css" />
-    <script src="script.js" defer></script>
-  </head>
-  <body>
-    <div class="navbar">
-      <h1>Time Measurement Converter</h1>
-      <!-- Added theme toggle button -->
-      <button class="theme-toggle" onclick="toggleTheme()">Dark Theme</button>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Measurement Converter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Time Measurement Converter</h1>
+
+    <div class="theme-toggle-container">
+        <button class="theme-toggle" onclick="toggleTheme()">Dark Theme</button>
     </div>
 
-    <div class="container">
-      <h2>Convert Time</h2>
-      <div class="form-group">
-        <label for="timeValue">Time Value</label>
-        <input type="number" id="timeValue" placeholder="Enter time value" required />
-      </div>
+    <div class="conversion-container">
+        <label for="timeValue">Value:</label>
+        <input type="number" id="timeValue" min="0" step="any" required>
 
-      <div class="form-group">
-        <label for="fromUnit">From Unit</label>
+        <label for="fromUnit">From Unit:</label>
         <select id="fromUnit">
-          <option value="seconds">Seconds</option>
-          <option value="minutes">Minutes</option>
-          <option value="hours">Hours</option>
-          <option value="days">Days</option>
-          <option value="weeks">Weeks</option>
-          <option value="months">Months</option>
-          <option value="years">Years</option>
+            <option value="seconds">Seconds</option>
+            <option value="minutes">Minutes</option>
+            <option value="hours">Hours</option>
+            <option value="days">Days</option>
+            <option value="weeks">Weeks</option>
         </select>
-      </div>
 
-      <div class="form-group">
-        <label for="toUnit">To Unit</label>
+        <label for="toUnit">To Unit:</label>
         <select id="toUnit">
-          <option value="seconds">Seconds</option>
-          <option value="minutes">Minutes</option>
-          <option value="hours">Hours</option>
-          <option value="days">Days</option>
-          <option value="weeks">Weeks</option>
-          <option value="months">Months</option>
-          <option value="years">Years</option>
+            <option value="seconds">Seconds</option>
+            <option value="minutes">Minutes</option>
+            <option value="hours">Hours</option>
+            <option value="days">Days</option>
+            <option value="weeks">Weeks</option>
         </select>
-      </div>
 
-      <button onclick="convertTime()">Convert</button>
-
-      <div id="result" class="panel"></div>
-
-      <button id="downloadBtn" onclick="downloadResult()" style="display:none;">Download Result</button>
-
-      <a href="history.html" class="back-btn">View History</a>
+        <button onclick="convertTime()">Convert</button>
     </div>
-  </body>
+
+    <div id="result"></div>
+
+    <div id="historyLink">
+        <a href="history.html">View Conversion History</a>
+    </div>
+
+    <div id="favoriteConversion">
+        <button onclick="saveFavoriteConversion()">Save Favorite Conversion</button>
+    </div>
+
+    <button id="downloadBtn" style="display:none" onclick="downloadResult()">Download Result</button>
+
+    <script src="app.js"></script>
+</body>
 </html>
