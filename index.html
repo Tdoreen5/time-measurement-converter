@@ -1,55 +1,333 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en-US" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="https://c.s-microsoft.com/favicon.ico?v2" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="styles.css" />
     <title>Time Measurement Converter</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <h1>Time Measurement Converter</h1>
+    <style>
+      :root {
+        --bg-color: #ffffff;
+        --text-color: #000000;
+        --button-bg: #007bff;
+        --button-text: #ffffff;
+      }
 
-    <div class="theme-toggle-container">
-        <button class="theme-toggle" onclick="toggleTheme()">Dark Theme</button>
-    </div>
+      [data-theme="dark"] {
+        --bg-color: #121212;
+        --text-color: #ffffff;
+        --button-bg: #0d6efd;
+        --button-text: #ffffff;
+      }
 
-    <div class="conversion-container">
-        <label for="timeValue">Value:</label>
-        <input type="number" id="timeValue" min="0" step="any" required>
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
 
-        <label for="fromUnit">From Unit:</label>
+      .container {
+        padding: 20px;
+        max-width: 600px;
+        margin: auto;
+      }
+
+      button {
+        background-color: var(--button-bg);
+        color: var(--button-text);
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+
+      button:hover {
+        opacity: 0.9;
+      }
+
+      .theme-toggle {
+        float: right;
+        margin-top: -40px;
+      }
+
+      a {
+        display: inline-block;
+        margin: 10px 0;
+        padding: 10px 20px;
+        text-decoration: none;
+        color: var(--button-text);
+        background-color: var(--button-bg);
+        border-radius: 5px;
+        font-size: 16px;
+        text-align: center;
+      }
+
+      a:hover {
+        opacity: 0.9;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      input, select {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        margin-top: 5px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+      }
+
+      .panel {
+        margin-top: 30px;
+      }
+
+      .countdown {
+        margin-top: 20px;
+        font-size: 18px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Time Measurement Converter</h1>
+      <button class="theme-toggle" onclick="toggleTheme()">Dark Theme</button>
+
+      <!-- Link to history page -->
+      <a href="history.html">View Conversion History</a>
+      
+      <p>Convert time between various units:</p>
+
+      <div class="form-group">
+        <label for="timeValue">Enter Time Value:</label>
+        <input type="number" id="timeValue" placeholder="Enter a number (e.g. 5)" />
+      </div>
+
+      <div class="form-group">
+        <label for="fromUnit">From:</label>
         <select id="fromUnit">
-            <option value="seconds">Seconds</option>
-            <option value="minutes">Minutes</option>
-            <option value="hours">Hours</option>
-            <option value="days">Days</option>
-            <option value="weeks">Weeks</option>
+          <option value="seconds">Seconds</option>
+          <option value="minutes">Minutes</option>
+          <option value="hours">Hours</option>
+          <option value="days">Days</option>
+          <option value="weeks">Weeks</option>
+          <option value="months">Months</option>
+          <option value="years">Years</option>
         </select>
+      </div>
 
-        <label for="toUnit">To Unit:</label>
+      <div class="form-group">
+        <label for="toUnit">To:</label>
         <select id="toUnit">
+          <option value="seconds">Seconds</option>
+          <option value="minutes">Minutes</option>
+          <option value="hours">Hours</option>
+          <option value="days">Days</option>
+          <option value="weeks">Weeks</option>
+          <option value="months">Months</option>
+          <option value="years">Years</option>
+        </select>
+      </div>
+
+      <button onclick="convertTime()">Convert</button>
+
+      <h2>Result:</h2>
+      <p id="result">---</p>
+
+      <button onclick="downloadResult()" id="downloadBtn" style="display:none;">Download Result</button>
+
+      <div class="panel">
+        <h3>Add or Subtract Time</h3>
+        <div class="form-group">
+          <label for="operation">Operation:</label>
+          <select id="operation">
+            <option value="add">Add</option>
+            <option value="subtract">Subtract</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="addSubtractValue">Amount:</label>
+          <input type="number" id="addSubtractValue" placeholder="Enter number" />
+        </div>
+        <div class="form-group">
+          <label for="addSubtractUnit">Unit:</label>
+          <select id="addSubtractUnit">
             <option value="seconds">Seconds</option>
             <option value="minutes">Minutes</option>
             <option value="hours">Hours</option>
             <option value="days">Days</option>
-            <option value="weeks">Weeks</option>
-        </select>
+            <option value="months">Months</option>
+            <option value="years">Years</option>
+          </select>
+        </div>
+        <button onclick="addSubtractTime()">Apply</button>
+        <p id="modifiedDate"></p>
+      </div>
 
-        <button onclick="convertTime()">Convert</button>
+      <div class="panel">
+        <h3>Time Since Event</h3>
+        <div class="form-group">
+          <label for="eventDate">Enter Event Date:</label>
+          <input type="datetime-local" id="eventDate" />
+        </div>
+        <div class="form-group">
+          <label for="eventUnit">Select Unit:</label>
+          <select id="eventUnit">
+            <option value="seconds">Seconds</option>
+            <option value="minutes">Minutes</option>
+            <option value="hours">Hours</option>
+            <option value="days">Days</option>
+            <option value="months">Months</option>
+            <option value="years">Years</option>
+          </select>
+        </div>
+        <button onclick="calculateTimeSinceEvent()">Calculate</button>
+        <p id="timeSinceEvent"></p>
+      </div>
+
+      <div class="panel">
+        <h3>Countdown to Event</h3>
+        <div class="form-group">
+          <label for="eventDateCountdown">Enter Event Date:</label>
+          <input type="datetime-local" id="eventDateCountdown" />
+        </div>
+        <button onclick="countdownToEvent()">Start Countdown</button>
+        <p id="countdown"></p>
+      </div>
     </div>
 
-    <div id="result"></div>
+    <script>
+      let isDarkTheme = false;
 
-    <div id="historyLink">
-        <a href="history.html">View Conversion History</a>
-    </div>
+      function toggleTheme() {
+        isDarkTheme = !isDarkTheme;
+        document.documentElement.setAttribute('data-theme', isDarkTheme ? 'dark' : 'light');
+        document.querySelector('.theme-toggle').textContent = isDarkTheme ? 'Light Theme' : 'Dark Theme';
+      }
 
-    <div id="favoriteConversion">
-        <button onclick="saveFavoriteConversion()">Save Favorite Conversion</button>
-    </div>
+      // Conversion Logic
+      function convertTime() {
+        const timeValue = document.getElementById('timeValue').value;
+        const fromUnit = document.getElementById('fromUnit').value;
+        const toUnit = document.getElementById('toUnit').value;
+        let result;
 
-    <button id="downloadBtn" style="display:none" onclick="downloadResult()">Download Result</button>
+        // Conversion factors (seconds as base unit)
+        const conversionFactors = {
+          seconds: 1,
+          minutes: 60,
+          hours: 3600,
+          days: 86400,
+          weeks: 604800,
+          months: 2629746,  // Average seconds in a month (30.44 days)
+          years: 31556952  // Average seconds in a year
+        };
 
-    <script src="app.js"></script>
-</body>
+        // Convert the value to seconds first, then to the target unit
+        const valueInSeconds = timeValue * conversionFactors[fromUnit];
+        const convertedValue = valueInSeconds / conversionFactors[toUnit];
+        result = `${timeValue} ${fromUnit} is equal to ${convertedValue.toFixed(2)} ${toUnit}.`;
+
+        document.getElementById('result').textContent = result;
+        document.getElementById('downloadBtn').style.display = 'inline';
+      }
+
+      // Download result function
+      function downloadResult() {
+        const resultText = document.getElementById('result').textContent;
+        const blob = new Blob([resultText], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'conversion-result.txt';
+        link.click();
+      }
+
+      // Add/Subtract Time Logic
+      function addSubtractTime() {
+        const operation = document.getElementById('operation').value;
+        const value = document.getElementById('addSubtractValue').value;
+        const unit = document.getElementById('addSubtractUnit').value;
+        const modifiedDate = new Date();
+
+        if (operation === 'add') {
+          if (unit === 'seconds') modifiedDate.setSeconds(modifiedDate.getSeconds() + parseInt(value));
+          else if (unit === 'minutes') modifiedDate.setMinutes(modifiedDate.getMinutes() + parseInt(value));
+          else if (unit === 'hours') modifiedDate.setHours(modifiedDate.getHours() + parseInt(value));
+          else if (unit === 'days') modifiedDate.setDate(modifiedDate.getDate() + parseInt(value));
+          else if (unit === 'months') modifiedDate.setMonth(modifiedDate.getMonth() + parseInt(value));
+          else if (unit === 'years') modifiedDate.setFullYear(modifiedDate.getFullYear() + parseInt(value));
+        } else if (operation === 'subtract') {
+          if (unit === 'seconds') modifiedDate.setSeconds(modifiedDate.getSeconds() - parseInt(value));
+          else if (unit === 'minutes') modifiedDate.setMinutes(modifiedDate.getMinutes() - parseInt(value));
+          else if (unit === 'hours') modifiedDate.setHours(modifiedDate.getHours() - parseInt(value));
+          else if (unit === 'days') modifiedDate.setDate(modifiedDate.getDate() - parseInt(value));
+          else if (unit === 'months') modifiedDate.setMonth(modifiedDate.getMonth() - parseInt(value));
+          else if (unit === 'years') modifiedDate.setFullYear(modifiedDate.getFullYear() - parseInt(value));
+        }
+
+        document.getElementById('modifiedDate').textContent = `Modified Date: ${modifiedDate}`;
+      }
+
+      // Calculate Time Since Event
+      function calculateTimeSinceEvent() {
+        const eventDate = document.getElementById('eventDate').value;
+        const eventUnit = document.getElementById('eventUnit').value;
+        const eventDateObj = new Date(eventDate);
+        const now = new Date();
+        const diff = now - eventDateObj;
+        let result;
+
+        switch (eventUnit) {
+          case 'seconds':
+            result = Math.floor(diff / 1000);
+            break;
+          case 'minutes':
+            result = Math.floor(diff / (1000 * 60));
+            break;
+          case 'hours':
+            result = Math.floor(diff / (1000 * 60 * 60));
+            break;
+          case 'days':
+            result = Math.floor(diff / (1000 * 60 * 60 * 24));
+            break;
+          case 'months':
+            result = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
+            break;
+          case 'years':
+            result = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
+            break;
+        }
+        document.getElementById('timeSinceEvent').textContent = `Time since event: ${result} ${eventUnit}.`;
+      }
+
+      // Countdown to Event
+      function countdownToEvent() {
+        const eventDate = document.getElementById('eventDateCountdown').value;
+        const eventDateObj = new Date(eventDate);
+        const now = new Date();
+        const countdown = eventDateObj - now;
+
+        if (countdown < 0) {
+          document.getElementById('countdown').textContent = "Time Event has already passed";
+        } else {
+          const days = Math.floor(countdown / (1000 * 60 * 60 * 24));
+          document.getElementById('countdown').textContent = `Countdown: ${days} days remaining.`;
+        }
+      }
+    </script>
+  </body>
 </html>
