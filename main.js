@@ -25,6 +25,7 @@ function saveConversionHistory(inputValue, fromUnit, toUnit, resultValue) {
 
     conversionHistory.push(conversion);
     localStorage.setItem('conversionHistory', JSON.stringify(conversionHistory));
+    console.log("History saved:", conversionHistory);
 }
 
 // Convert time values
@@ -39,6 +40,8 @@ function convertTime() {
         return;
     }
 
+    console.log(`Converting ${timeValue} ${fromUnit} to ${toUnit}`);
+
     // Conversion factors (seconds as base unit)
     const conversionFactors = {
         seconds: 1,
@@ -51,6 +54,8 @@ function convertTime() {
     const valueInSeconds = timeValue * conversionFactors[fromUnit];
     const convertedValue = valueInSeconds / conversionFactors[toUnit];
     const result = `${timeValue} ${fromUnit} is equal to ${convertedValue.toFixed(2)} ${toUnit}.`;
+
+    console.log("Conversion result:", result);
 
     document.getElementById('result').textContent = result;
     document.getElementById('downloadBtn').style.display = 'inline';
