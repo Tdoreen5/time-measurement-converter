@@ -14,22 +14,20 @@
         text-align: center;
       }
 
-      .history-item {
-        background-color: #f9f9f9;
-        padding: 15px;
-        margin-bottom: 10px;
-        border-radius: 8px;
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      table, th, td {
         border: 1px solid #ccc;
+        padding: 10px;
+        text-align: left;
       }
 
-      .history-item h2 {
-        margin: 0;
-        font-size: 18px;
-      }
-
-      .history-item p {
-        margin: 5px 0;
-        font-size: 16px;
+      th {
+        background-color: #f2f2f2;
       }
 
       .back-btn {
@@ -64,18 +62,22 @@
         if (conversionHistory.length === 0) {
           historyContainer.innerHTML = '<p>No history available.</p>';
         } else {
+          let historyTable = `<table><tr><th>Input</th><th>From Unit</th><th>To Unit</th><th>Result</th><th>Timestamp</th></tr>`;
+          
           conversionHistory.forEach(conversion => {
-            const historyItem = document.createElement('div');
-            historyItem.className = 'history-item';
-
-            historyItem.innerHTML = `
-              <h2>${conversion.timeValue} ${conversion.fromUnit} → ${conversion.toUnit}</h2>
-              <p><strong>Result:</strong> ${conversion.result}</p>
-              <p><strong>Conversion Date:</strong> ${conversion.date}</p>
+            historyTable += `
+              <tr>
+                <td>${conversion.timeValue}</td>
+                <td>${conversion.fromUnit}</td>
+                <td>${conversion.toUnit}</td>
+                <td>${conversion.result}</td>
+                <td>${conversion.date}</td>
+              </tr>
             `;
-
-            historyContainer.appendChild(historyItem);
           });
+      
+          historyTable += '</table>';
+          historyContainer.innerHTML = historyTable;
         }
       };
     </script>
