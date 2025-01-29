@@ -6,33 +6,38 @@ function toggleTheme() {
     document.querySelector('.theme-toggle').textContent = isDarkTheme ? 'Light Theme' : 'Dark Theme';
 }
 
-// Store conversion in local storage
-function saveConversionHistory(timeValue, fromUnit, toUnit, result) {
-    if (!timeValue || !fromUnit || !toUnit || !result) {
+// Save conversion history to localStorage
+function saveConversionHistory(inputValue, fromUnit, toUnit, resultValue) {
+    if (!inputValue || !fromUnit || !toUnit || !resultValue) {
         console.error("Invalid conversion data!");
-        return; // Prevent storing invalid data
+        return;
     }
 
     let conversionHistory = JSON.parse(localStorage.getItem('conversionHistory')) || [];
 
     const conversion = {
-      timeValue,
+      inputValue,
       fromUnit,
       toUnit,
-      result,
-      date: new Date().toLocaleString()
+      resultValue,
+      timestamp: new Date().toLocaleString()
     };
 
     conversionHistory.push(conversion);
     localStorage.setItem('conversionHistory', JSON.stringify(conversionHistory));
 }
 
-// Conversion logic
+// Convert time values
 function convertTime() {
-    const timeValue = document.getElementById('timeValue').value;
+    const timeValue = parseFloat(document.getElementById('timeValue').value);
     const fromUnit = document.getElementById('fromUnit').value;
     const toUnit = document.getElementById('toUnit').value;
-    let result;
+
+    // Validate input value
+    if (isNaN(timeValue) || timeValue <= 0) {
+        alert("Please enter a valid positive number.");
+        return;
+    }
 
     // Conversion factors (seconds as base unit)
     const conversionFactors = {
@@ -40,21 +45,29 @@ function convertTime() {
         minutes: 60,
         hours: 3600,
         days: 86400,
-        weeks: 604800,
-        months: 2629746,  // Average seconds in a month (30.44 days)
-        years: 31556952  // Average seconds in a year
+        weeks: 604800
     };
 
-    // Convert the value to seconds first, then to the target unit
     const valueInSeconds = timeValue * conversionFactors[fromUnit];
     const convertedValue = valueInSeconds / conversionFactors[toUnit];
-    result = `${timeValue} ${fromUnit} is equal to ${convertedValue.toFixed(2)} ${toUnit}.`;
+    const result = `${timeValue} ${fromUnit} is equal to ${convertedValue.toFixed(2)} ${toUnit}.`;
 
     document.getElementById('result').textContent = result;
     document.getElementById('downloadBtn').style.display = 'inline';
 
-    // Save conversion to history
     saveConversionHistory(timeValue, fromUnit, toUnit, result);
+}
+
+// Save favorite conversion
+function saveFavoriteConversion() {
+    const fromUnit = document.getElementById('fromUnit').value;
+    const toUnit = document.getElementById('toUnit').value;
+    let favoriteConversions = JSON.parse(localStorage.getItem('favoriteConversions')) || [];
+
+    favoriteConversions.push({ fromUnit, toUnit });
+    localStorage.setItem('favoriteConversions', JSON.stringify(favoriteConversions));
+
+    alert(`Saved ${fromUnit} to ${toUnit} as a favorite conversion!`);
 }
 
 // Download result function
