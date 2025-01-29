@@ -1,87 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Conversion History</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-      }
-
-      h1 {
-        text-align: center;
-      }
-
-      .history-item {
-        background-color: #f9f9f9;
-        padding: 15px;
-        margin-bottom: 10px;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-      }
-
-      .history-item h2 {
-        margin: 0;
-        font-size: 18px;
-      }
-
-      .history-item p {
-        margin: 5px 0;
-        font-size: 16px;
-      }
-
-      .back-btn {
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: #fff;
-        text-decoration: none;
-        border-radius: 5px;
-        font-size: 16px;
-        margin-top: 20px;
-        text-align: center;
-      }
-
-      .back-btn:hover {
-        opacity: 0.9;
-      }
-    </style>
-  </head>
-  <body>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
     <h1>Conversion History</h1>
     <div id="historyContainer"></div>
     <a href="index.html" class="back-btn">Back to Converter</a>
-
-    <script>
-      // Fetch and display the conversion history from localStorage
-      window.onload = function () {
-        const conversionHistory = JSON.parse(localStorage.getItem('conversionHistory')) || [];
-
-        const historyContainer = document.getElementById('historyContainer');
-        
-        if (conversionHistory.length === 0) {
-          historyContainer.innerHTML = '<p>No history available.</p>';
-        } else {
-          let historyTable = `<table><tr><th>Input</th><th>From Unit</th><th>To Unit</th><th>Result</th><th>Timestamp</th></tr>`;
-          
-          conversionHistory.forEach(conversion => {
-            historyTable += `
-              <tr>
-                <td>${conversion.timeValue}</td>
-                <td>${conversion.fromUnit}</td>
-                <td>${conversion.toUnit}</td>
-                <td>${conversion.result}</td>
-                <td>${conversion.date}</td>
-              </tr>
-            `;
-          });
-      
-          historyTable += '</table>';
-          historyContainer.innerHTML = historyTable;
-        }
-      };
-    </script>
-  </body>
+    <script src="history.js"></script>
+</body>
 </html>
