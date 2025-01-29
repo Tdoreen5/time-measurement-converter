@@ -8,14 +8,21 @@ function toggleTheme() {
 
 // Store conversion in local storage
 function saveConversionHistory(timeValue, fromUnit, toUnit, result) {
-    const conversionHistory = JSON.parse(localStorage.getItem('conversionHistory')) || [];
+    if (!timeValue || !fromUnit || !toUnit || !result) {
+        console.error("Invalid conversion data!");
+        return; // Prevent storing invalid data
+    }
+
+    let conversionHistory = JSON.parse(localStorage.getItem('conversionHistory')) || [];
+
     const conversion = {
-        timeValue,
-        fromUnit,
-        toUnit,
-        result,
-        date: new Date().toLocaleString()
+      timeValue,
+      fromUnit,
+      toUnit,
+      result,
+      date: new Date().toLocaleString()
     };
+
     conversionHistory.push(conversion);
     localStorage.setItem('conversionHistory', JSON.stringify(conversionHistory));
 }
