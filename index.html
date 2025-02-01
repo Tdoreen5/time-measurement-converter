@@ -292,6 +292,18 @@
         // Display result
         document.getElementById('result').textContent = result + ' ' + toUnit;
         document.getElementById('downloadBtn').style.display = 'inline';
+
+        // Save conversion to history
+        const conversionHistory = JSON.parse(localStorage.getItem('conversionHistory')) || [];
+        const conversion = {
+          timeValue,
+          fromUnit,
+          toUnit,
+          result,
+          date: new Date().toLocaleString(),
+        };
+        conversionHistory.push(conversion);
+        localStorage.setItem('conversionHistory', JSON.stringify(conversionHistory));
       }
 
       // Download result as a text file
@@ -339,72 +351,74 @@
         const worldTimeValue = document.getElementById('worldTimeValue').value;
         const worldTimeZone = document.getElementById('worldTimeZone').value;
 
-        // Just a simple simulation of world time conversion
-        const currentTime = new Date();
-        const offset = {
-          GMT: 0,
-          EST: -5,
-          PST: -8,
-          CET: 1,
-          IST: 5.5
-        }[worldTimeZone];
+        let convertedTime = worldTimeValue;
 
-        currentTime.setHours(currentTime.getHours() + offset);
-        document.getElementById('convertedWorldTime').textContent = `Converted Time in ${worldTimeZone}: ${currentTime.toLocaleString()}`;
+        // Simple conversion (you can add actual conversion logic here)
+        if (worldTimeZone === 'GMT') {
+          convertedTime += ' GMT';
+        } else if (worldTimeZone === 'EST') {
+          convertedTime += ' EST';
+        }
+
+        document.getElementById('convertedWorldTime').textContent = 'Converted Time: ' + convertedTime;
       }
 
-      // Time since event
+      // Time since event logic
       function calculateTimeSinceEvent() {
         const eventDate = document.getElementById('eventDate').value;
         const eventUnit = document.getElementById('eventUnit').value;
 
-        const timeSince = new Date() - new Date(eventDate);
-        let result;
-        switch (eventUnit) {
-          case 'seconds':
-            result = Math.floor(timeSince / 1000);
-            break;
-          case 'minutes':
-            result = Math.floor(timeSince / (1000 * 60));
-            break;
-          case 'hours':
-            result = Math.floor(timeSince / (1000 * 60 * 60));
-            break;
-          case 'days':
-            result = Math.floor(timeSince / (1000 * 60 * 60 * 24));
-            break;
-          case 'months':
-            result = Math.floor(timeSince / (1000 * 60 * 60 * 24 * 30)); // Approx. 30 days
-            break;
-          case 'years':
-            result = Math.floor(timeSince / (1000 * 60 * 60 * 24 * 365)); // Approx. 365 days
-            break;
-        }
-        document.getElementById('timeSinceEvent').textContent = `Time since event: ${result} ${eventUnit}`;
+        const eventDateObj = new Date(eventDate);
+        const currentDate = new Date();
+        const timeDifference = currentDate - eventDateObj;
+
+        const unitsInMilliseconds = {
+          seconds: 1000,
+          minutes: 1000 * 60,
+          hours: 1000 * 60 * 60,
+          days: 1000 * 60 * 60 * 24,
+          months: 1000 * 60 * 60 * 24 * 30, // Approximate
+          years: 1000 * 60 * 60 * 24 * 365, // Approximate
+        };
+
+        const timeSince = timeDifference / unitsInMilliseconds[eventUnit];
+        document.getElementById('timeSinceEvent').textContent = `Time Since Event: ${Math.floor(timeSince)} ${eventUnit}`;
       }
 
-      // Countdown to event
+      // Countdown functionality
       function countdownToEvent() {
-        const eventDateCountdown = document.getElementById('eventDateCountdown').value;
-        const eventTime = new Date(eventDateCountdown).getTime();
+        const eventDate = document.getElementById('eventDateCountdown').value;
+        const eventDateObj = new Date(eventDate);
+        const interval = setInterval(function () {
+          const currentDate = new Date();
+          const timeRemaining = eventDateObj - currentDate;
 
-        const countdownInterval = setInterval(function () {
-          const now = new Date().getTime();
-          const distance = eventTime - now;
-
-          if (distance <= 0) {
-            clearInterval(countdownInterval);
-            document.getElementById('countdown').textContent = 'Event Started!';
+          if (timeRemaining <= 0) {
+            document.getElementById('countdown').textContent = 'Event has occurred!';
+            clearInterval(interval);
           } else {
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById('countdown').textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            document.getElementById('countdown').textContent = `Time Remaining: ${hours}h ${minutes}m ${seconds}s`;
           }
         }, 1000);
       }
+
+      // Load conversion history in history page
+      window.onload = function () {
+        const conversionHistory = JSON.parse(localStorage.getItem('conversionHistory')) || [];
+        const historyContainer = document.getElementById('historyContainer');
+        conversionHistory.forEach(conversion => {
+          const historyItem = document.createElement('div');
+          historyItem.className = 'history-item';
+          historyItem.innerHTML = `
+            <p><strong>${conversion.date}</strong></p>
+            <p>Converted ${conversion.timeValue} ${conversion.fromUnit} to ${conversion.result} ${conversion.toUnit}</p>
+          `;
+          historyContainer.appendChild(historyItem);
+        });
+      };
     </script>
   </body>
 </html>
