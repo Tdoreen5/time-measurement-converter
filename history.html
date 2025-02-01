@@ -1,13 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="https://c.s-microsoft.com/favicon.ico?v2" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="styles.css" />
     <title>Conversion History</title>
     <style>
       body {
+        background-color: #ffffff;
+        color: #000000;
         font-family: Arial, sans-serif;
-        margin: 20px;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        padding: 20px;
+        max-width: 800px;
+        margin: auto;
       }
 
       h1 {
@@ -15,65 +27,63 @@
       }
 
       .history-item {
-        background-color: #f9f9f9;
+        border: 1px solid #ccc;
         padding: 15px;
         margin-bottom: 10px;
         border-radius: 8px;
-        border: 1px solid #ccc;
-      }
-
-      .history-item h2 {
-        margin: 0;
-        font-size: 18px;
       }
 
       .history-item p {
         margin: 5px 0;
-        font-size: 16px;
+      }
+
+      .history-item strong {
+        font-weight: bold;
       }
 
       .back-btn {
-        display: inline-block;
+        display: block;
+        text-align: center;
+        margin-top: 30px;
         padding: 10px 20px;
         background-color: #007bff;
-        color: #fff;
-        text-decoration: none;
+        color: white;
         border-radius: 5px;
+        text-decoration: none;
         font-size: 16px;
-        margin-top: 20px;
-        text-align: center;
       }
 
       .back-btn:hover {
-        opacity: 0.9;
+        background-color: #0056b3;
       }
     </style>
   </head>
   <body>
-    <h1>Conversion History</h1>
-    <div id="historyContainer"></div>
-    <a href="index.html" class="back-btn">Back to Converter</a>
+    <div class="container">
+      <h1>Conversion History</h1>
+
+      <div id="historyContainer">
+        <!-- Conversion history items will be dynamically loaded here -->
+      </div>
+
+      <a href="index.html" class="back-btn">Back to Converter</a>
+    </div>
 
     <script>
-      // Fetch and display the conversion history from localStorage
       window.onload = function () {
         const conversionHistory = JSON.parse(localStorage.getItem('conversionHistory')) || [];
-
         const historyContainer = document.getElementById('historyContainer');
-        
+
         if (conversionHistory.length === 0) {
-          historyContainer.innerHTML = '<p>No history available.</p>';
+          historyContainer.innerHTML = "<p>No conversions found.</p>";
         } else {
-          conversionHistory.forEach(conversion => {
+          conversionHistory.forEach((conversion) => {
             const historyItem = document.createElement('div');
             historyItem.className = 'history-item';
-
             historyItem.innerHTML = `
-              <h2>${conversion.timeValue} ${conversion.fromUnit} → ${conversion.toUnit}</h2>
-              <p><strong>Result:</strong> ${conversion.result}</p>
-              <p><strong>Conversion Date:</strong> ${conversion.date}</p>
+              <p><strong>${conversion.date}</strong></p>
+              <p>Converted ${conversion.timeValue} ${conversion.fromUnit} to ${conversion.result} ${conversion.toUnit}</p>
             `;
-
             historyContainer.appendChild(historyItem);
           });
         }
