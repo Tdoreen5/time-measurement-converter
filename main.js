@@ -16,11 +16,11 @@ function saveConversionHistory(timeValue, fromUnit, toUnit, result) {
     let conversionHistory = JSON.parse(localStorage.getItem('conversionHistory')) || [];
 
     const conversion = {
-      timeValue,
-      fromUnit,
-      toUnit,
-      result,
-      date: new Date().toLocaleString()
+        timeValue,
+        fromUnit,
+        toUnit,
+        result,
+        date: new Date().toLocaleString()
     };
 
     conversionHistory.push(conversion);
@@ -66,3 +66,70 @@ function downloadResult() {
     link.download = 'conversion-result.txt';
     link.click();
 }
+
+// New component: Custom Time Units (for managing user-defined units)
+function addCustomUnit() {
+    const unitName = document.getElementById('customUnitName').value;
+    const unitFactor = parseFloat(document.getElementById('customUnitFactor').value);
+
+    if (unitName && !isNaN(unitFactor)) {
+        let customUnits = JSON.parse(localStorage.getItem('customUnits')) || [];
+        customUnits.push({ unitName, unitFactor });
+        localStorage.setItem('customUnits', JSON.stringify(customUnits));
+        loadCustomUnits(); // Reload the list
+    } else {
+        alert('Please provide a valid unit name and conversion factor.');
+    }
+}
+
+function loadCustomUnits() {
+    const customUnitsList = document.getElementById('customUnitsList');
+    customUnitsList.innerHTML = ''; // Clear existing list
+
+    const customUnits = JSON.parse(localStorage.getItem('customUnits')) || [];
+    customUnits.forEach(unit => {
+        const li = document.createElement('li');
+        li.innerHTML = `${unit.unitName}: ${unit.unitFactor} seconds`;
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.onclick = function() {
+            deleteCustomUnit(unit.unitName);
+        };
+        li.appendChild(deleteBtn);
+        customUnitsList.appendChild(li);
+    });
+}
+
+function deleteCustomUnit(unitName) {
+    let customUnits = JSON.parse(localStorage.getItem('customUnits')) || [];
+    customUnits = customUnits.filter(unit => unit.unitName !== unitName);
+    localStorage.setItem('customUnits', JSON.stringify(customUnits));
+    loadCustomUnits(); // Reload the list after deletion
+}
+
+// New component: World Time Converter
+function convertToWorldTime() {
+    const timeValue = document.getElementById('worldTimeValue').value;
+    const selectedTimezone = document.getElementById('worldTimeZone').value;
+
+    const timezones = {
+        "GMT": 0,
+        "EST": -5,
+        "PST": -8,
+        "CET": 1,
+        "IST": 5.5
+    };
+
+    if (timezones[selectedTimezone] !== undefined) {
+        const offset = timezones[selectedTimezone];
+        const convertedTime = new Date(new Date().getTime() + (offset * 60 * 60 * 1000));
+        document.getElementById('convertedWorldTime').textContent = `${timeValue} is ${convertedTime.toLocaleString()} in ${selectedTimezone}.`;
+    } else {
+        alert('Invalid timezone selection');
+    }
+}
+
+// Initializing the app and loading custom units on page load
+window.onload = function() {
+    loadCustomUnits(); // Load custom time units when the page loads
+};
