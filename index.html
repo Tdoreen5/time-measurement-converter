@@ -276,32 +276,48 @@
 
       // Convert to world time (simple logic for demo)
       function convertToWorldTime() {
-        const worldTimeValue = document.getElementById('worldTimeValue').value;
-        const worldTimeZone = document.getElementById('worldTimeZone').value;
+    const worldTimeValue = document.getElementById('worldTimeValue').value;
+    const worldTimeZone = document.getElementById('worldTimeZone').value;
 
-        let convertedTime = worldTimeValue;
+    // Get current date
+    const currentDate = new Date(worldTimeValue);
+    
+    // Map of time zones to UTC offset in minutes
+    const timeZoneOffsets = {
+        GMT: 0,
+        EST: -5 * 60,
+        PST: -8 * 60,
+        CET: 1 * 60,
+        IST: 5.5 * 60,
+        AEST: 10 * 60,
+        JST: 9 * 60,
+        UTC: 0
+    };
 
-        // Simple conversion (you can add actual conversion logic here)
-        if (worldTimeZone === 'GMT') {
-          convertedTime += ' GMT';
-        } else if (worldTimeZone === 'EST') {
-          convertedTime += ' EST';
-        } else if (worldTimeZone === 'PST') {
-          convertedTime += ' PST';
-        } else if (worldTimeZone === 'CET') {
-          convertedTime += ' CET';
-        } else if (worldTimeZone === 'IST') {
-          convertedTime += ' IST';
-        } else if (worldTimeZone === 'AEST') {
-          convertedTime += ' AEST';
-        } else if (worldTimeZone === 'JST') {
-          convertedTime += ' JST';
-        } else if (worldTimeZone === 'UTC') {
-          convertedTime += ' UTC';
-        }
+    // Get the offset for the selected time zone
+    const offset = timeZoneOffsets[worldTimeZone];
 
-        document.getElementById('convertedWorldTime').textContent = 'Converted Time: ' + convertedTime;
-      }
+    // Adjust the current date by the offset (convert to the target time zone)
+    const adjustedDate = new Date(currentDate.getTime() + offset * 60000);
+
+    // Format the converted date into a readable string
+    const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        timeZoneName: 'short'
+    };
+
+    const formattedDate = new Intl.DateTimeFormat('en-US', options).format(adjustedDate);
+
+    // Display the result
+    document.getElementById('convertedWorldTime').textContent = `Converted Time: ${formattedDate}`;
+}
+
 
       // Time since event logic
       function calculateTimeSinceEvent() {
