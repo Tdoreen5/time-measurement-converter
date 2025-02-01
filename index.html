@@ -185,7 +185,7 @@
         <p id="modifiedDate"></p>
       </div>
 
-      <!-- Custom Time Units Section (New) -->
+      <!-- Custom Time Units Section -->
       <div class="panel">
         <h3>Add Custom Time Units</h3>
         <div class="form-group">
@@ -201,7 +201,7 @@
         <ul id="customUnitsList"></ul>
       </div>
 
-      <!-- World Time Converter Section (New) -->
+      <!-- World Time Converter Section -->
       <div class="panel">
         <h3>World Time Converter</h3>
         <div class="form-group">
@@ -216,6 +216,9 @@
             <option value="PST">PST</option>
             <option value="CET">CET</option>
             <option value="IST">IST</option>
+            <option value="AEST">AEST</option>
+            <option value="JST">JST</option>
+            <option value="UTC">UTC</option>
           </select>
         </div>
         <button onclick="convertToWorldTime()">Convert</button>
@@ -358,6 +361,18 @@
           convertedTime += ' GMT';
         } else if (worldTimeZone === 'EST') {
           convertedTime += ' EST';
+        } else if (worldTimeZone === 'PST') {
+          convertedTime += ' PST';
+        } else if (worldTimeZone === 'CET') {
+          convertedTime += ' CET';
+        } else if (worldTimeZone === 'IST') {
+          convertedTime += ' IST';
+        } else if (worldTimeZone === 'AEST') {
+          convertedTime += ' AEST';
+        } else if (worldTimeZone === 'JST') {
+          convertedTime += ' JST';
+        } else if (worldTimeZone === 'UTC') {
+          convertedTime += ' UTC';
         }
 
         document.getElementById('convertedWorldTime').textContent = 'Converted Time: ' + convertedTime;
@@ -377,48 +392,39 @@
           minutes: 1000 * 60,
           hours: 1000 * 60 * 60,
           days: 1000 * 60 * 60 * 24,
-          months: 1000 * 60 * 60 * 24 * 30, // Approximate
-          years: 1000 * 60 * 60 * 24 * 365, // Approximate
+          months: 1000 * 60 * 60 * 24 * 30, // approx month
+          years: 1000 * 60 * 60 * 24 * 365, // approx year
         };
 
-        const timeSince = timeDifference / unitsInMilliseconds[eventUnit];
-        document.getElementById('timeSinceEvent').textContent = `Time Since Event: ${Math.floor(timeSince)} ${eventUnit}`;
+        const timeDifferenceInUnit = timeDifference / unitsInMilliseconds[eventUnit];
+
+        document.getElementById('timeSinceEvent').textContent = `${Math.floor(timeDifferenceInUnit)} ${eventUnit} ago`;
       }
 
-      // Countdown functionality
+      // Countdown logic
       function countdownToEvent() {
         const eventDate = document.getElementById('eventDateCountdown').value;
         const eventDateObj = new Date(eventDate);
-        const interval = setInterval(function () {
-          const currentDate = new Date();
-          const timeRemaining = eventDateObj - currentDate;
+        const currentDate = new Date();
+        const timeDifference = eventDateObj - currentDate;
 
-          if (timeRemaining <= 0) {
-            document.getElementById('countdown').textContent = 'Event has occurred!';
-            clearInterval(interval);
-          } else {
-            const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+        if (timeDifference <= 0) {
+          document.getElementById('countdown').textContent = 'Event has passed!';
+        } else {
+          setInterval(function () {
+            const now = new Date();
+            const timeRemaining = eventDateObj - now;
+
+            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-            document.getElementById('countdown').textContent = `Time Remaining: ${hours}h ${minutes}m ${seconds}s`;
-          }
-        }, 1000);
-      }
 
-      // Load conversion history in history page
-      window.onload = function () {
-        const conversionHistory = JSON.parse(localStorage.getItem('conversionHistory')) || [];
-        const historyContainer = document.getElementById('historyContainer');
-        conversionHistory.forEach(conversion => {
-          const historyItem = document.createElement('div');
-          historyItem.className = 'history-item';
-          historyItem.innerHTML = `
-            <p><strong>${conversion.date}</strong></p>
-            <p>Converted ${conversion.timeValue} ${conversion.fromUnit} to ${conversion.result} ${conversion.toUnit}</p>
-          `;
-          historyContainer.appendChild(historyItem);
-        });
-      };
+            document.getElementById('countdown').textContent =
+              days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's';
+          }, 1000);
+        }
+      }
     </script>
   </body>
 </html>
