@@ -9,7 +9,6 @@
     <title>Time Measurement Converter</title>
     <style>
       /* Your existing styles are retained */
-
       :root {
         --bg-color: #ffffff;
         --text-color: #000000;
@@ -83,7 +82,8 @@
         margin-bottom: 8px;
       }
 
-      input, select {
+      input,
+      select {
         width: 100%;
         padding: 10px;
         font-size: 16px;
@@ -161,7 +161,7 @@
         <h3>World Time Converter</h3>
         <div class="form-group">
           <label for="worldTimeValue">Time Value:</label>
-          <input type="text" id="worldTimeValue" placeholder="e.g. 10:00 AM" />
+          <input type="datetime-local" id="worldTimeValue" />
         </div>
         <div class="form-group">
           <label for="worldTimeZone">Select Time Zone:</label>
@@ -276,48 +276,52 @@
 
       // Convert to world time (simple logic for demo)
       function convertToWorldTime() {
-    const worldTimeValue = document.getElementById('worldTimeValue').value;
-    const worldTimeZone = document.getElementById('worldTimeZone').value;
+        const worldTimeValue = document.getElementById('worldTimeValue').value;
+        const worldTimeZone = document.getElementById('worldTimeZone').value;
 
-    // Get current date
-    const currentDate = new Date(worldTimeValue);
-    
-    // Map of time zones to UTC offset in minutes
-    const timeZoneOffsets = {
-        GMT: 0,
-        EST: -5 * 60,
-        PST: -8 * 60,
-        CET: 1 * 60,
-        IST: 5.5 * 60,
-        AEST: 10 * 60,
-        JST: 9 * 60,
-        UTC: 0
-    };
+        if (!worldTimeValue) {
+          document.getElementById('convertedWorldTime').textContent = "Please enter a valid time.";
+          return;
+        }
 
-    // Get the offset for the selected time zone
-    const offset = timeZoneOffsets[worldTimeZone];
+        // Get the selected date and time from the input (datetime-local gives a proper format)
+        const currentDate = new Date(worldTimeValue);
 
-    // Adjust the current date by the offset (convert to the target time zone)
-    const adjustedDate = new Date(currentDate.getTime() + offset * 60000);
+        // Map of time zones to UTC offset in minutes
+        const timeZoneOffsets = {
+          GMT: 0,
+          EST: -5 * 60,
+          PST: -8 * 60,
+          CET: 1 * 60,
+          IST: 5.5 * 60,
+          AEST: 10 * 60,
+          JST: 9 * 60,
+          UTC: 0
+        };
 
-    // Format the converted date into a readable string
-    const options = {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-        timeZoneName: 'short'
-    };
+        // Get the offset for the selected time zone
+        const offset = timeZoneOffsets[worldTimeZone];
 
-    const formattedDate = new Intl.DateTimeFormat('en-US', options).format(adjustedDate);
+        // Adjust the current date by the offset (convert to the target time zone)
+        const adjustedDate = new Date(currentDate.getTime() + offset * 60000);
 
-    // Display the result
-    document.getElementById('convertedWorldTime').textContent = `Converted Time: ${formattedDate}`;
-}
+        // Format the converted date into a readable string
+        const options = {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric',
+          timeZoneName: 'short'
+        };
 
+        const formattedDate = new Intl.DateTimeFormat('en-US', options).format(adjustedDate);
+
+        // Display the result
+        document.getElementById('convertedWorldTime').textContent = `Converted Time: ${formattedDate}`;
+      }
 
       // Time since event logic
       function calculateTimeSinceEvent() {
