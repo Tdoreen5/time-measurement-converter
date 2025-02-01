@@ -156,51 +156,6 @@
 
       <button onclick="downloadResult()" id="downloadBtn" style="display:none;">Download Result</button>
 
-      <!-- Existing Add/Subtract Time Section -->
-      <div class="panel">
-        <h3>Add or Subtract Time</h3>
-        <div class="form-group">
-          <label for="operation">Operation:</label>
-          <select id="operation">
-            <option value="add">Add</option>
-            <option value="subtract">Subtract</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="addSubtractValue">Amount:</label>
-          <input type="number" id="addSubtractValue" placeholder="Enter number" />
-        </div>
-        <div class="form-group">
-          <label for="addSubtractUnit">Unit:</label>
-          <select id="addSubtractUnit">
-            <option value="seconds">Seconds</option>
-            <option value="minutes">Minutes</option>
-            <option value="hours">Hours</option>
-            <option value="days">Days</option>
-            <option value="months">Months</option>
-            <option value="years">Years</option>
-          </select>
-        </div>
-        <button onclick="addSubtractTime()">Apply</button>
-        <p id="modifiedDate"></p>
-      </div>
-
-      <!-- Custom Time Units Section -->
-      <div class="panel">
-        <h3>Add Custom Time Units</h3>
-        <div class="form-group">
-          <label for="customUnitName">Unit Name:</label>
-          <input type="text" id="customUnitName" placeholder="e.g. Decade" />
-        </div>
-        <div class="form-group">
-          <label for="customUnitFactor">Conversion Factor (to seconds):</label>
-          <input type="number" id="customUnitFactor" placeholder="e.g. 315569520" />
-        </div>
-        <button onclick="addCustomUnit()">Add Unit</button>
-        <h4>Custom Units:</h4>
-        <ul id="customUnitsList"></ul>
-      </div>
-
       <!-- World Time Converter Section -->
       <div class="panel">
         <h3>World Time Converter</h3>
@@ -317,36 +272,6 @@
         link.href = URL.createObjectURL(blob);
         link.download = 'conversion_result.txt';
         link.click();
-      }
-
-      // Add/Subtract time logic
-      function addSubtractTime() {
-        const operation = document.getElementById('operation').value;
-        const value = document.getElementById('addSubtractValue').value;
-        const unit = document.getElementById('addSubtractUnit').value;
-
-        const currentDate = new Date();
-
-        let modifiedDate;
-        if (operation === 'add') {
-          modifiedDate = new Date(currentDate.getTime() + value * 1000 * (unit === 'seconds' ? 1 : (unit === 'minutes' ? 60 : (unit === 'hours' ? 3600 : (unit === 'days' ? 86400 : (unit === 'months' ? 2592000 : 31536000))))));
-        } else {
-          modifiedDate = new Date(currentDate.getTime() - value * 1000 * (unit === 'seconds' ? 1 : (unit === 'minutes' ? 60 : (unit === 'hours' ? 3600 : (unit === 'days' ? 86400 : (unit === 'months' ? 2592000 : 31536000))))));
-        }
-        document.getElementById('modifiedDate').textContent = 'Modified Date: ' + modifiedDate.toLocaleString();
-      }
-
-      // Add custom unit logic
-      function addCustomUnit() {
-        const customUnitName = document.getElementById('customUnitName').value;
-        const customUnitFactor = document.getElementById('customUnitFactor').value;
-
-        if (customUnitName && customUnitFactor) {
-          const customUnitList = document.getElementById('customUnitsList');
-          const listItem = document.createElement('li');
-          listItem.textContent = `${customUnitName}: ${customUnitFactor} seconds`;
-          customUnitList.appendChild(listItem);
-        }
       }
 
       // Convert to world time (simple logic for demo)
