@@ -27,7 +27,6 @@
   "orientation": "any",
   "lang": "en-US",
   "prefer_related_applications": false,
-  "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#4CAF50"
 }
