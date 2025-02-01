@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="styles.css" />
     <title>Time Measurement Converter</title>
     <style>
+      /* Your existing styles are retained */
+
       :root {
         --bg-color: #ffffff;
         --text-color: #000000;
@@ -112,6 +114,7 @@
       
       <p>Convert time between various units:</p>
 
+      <!-- Existing Conversion Form -->
       <div class="form-group">
         <label for="timeValue">Enter Time Value:</label>
         <input type="number" id="timeValue" placeholder="Enter a number (e.g. 5)" />
@@ -150,6 +153,7 @@
 
       <button onclick="downloadResult()" id="downloadBtn" style="display:none;">Download Result</button>
 
+      <!-- Existing Add/Subtract Time Section -->
       <div class="panel">
         <h3>Add or Subtract Time</h3>
         <div class="form-group">
@@ -178,6 +182,44 @@
         <p id="modifiedDate"></p>
       </div>
 
+      <!-- Custom Time Units Section (New) -->
+      <div class="panel">
+        <h3>Add Custom Time Units</h3>
+        <div class="form-group">
+          <label for="customUnitName">Unit Name:</label>
+          <input type="text" id="customUnitName" placeholder="e.g. Decade" />
+        </div>
+        <div class="form-group">
+          <label for="customUnitFactor">Conversion Factor (to seconds):</label>
+          <input type="number" id="customUnitFactor" placeholder="e.g. 315569520" />
+        </div>
+        <button onclick="addCustomUnit()">Add Unit</button>
+        <h4>Custom Units:</h4>
+        <ul id="customUnitsList"></ul>
+      </div>
+
+      <!-- World Time Converter Section (New) -->
+      <div class="panel">
+        <h3>World Time Converter</h3>
+        <div class="form-group">
+          <label for="worldTimeValue">Time Value:</label>
+          <input type="text" id="worldTimeValue" placeholder="e.g. 10:00 AM" />
+        </div>
+        <div class="form-group">
+          <label for="worldTimeZone">Select Time Zone:</label>
+          <select id="worldTimeZone">
+            <option value="GMT">GMT</option>
+            <option value="EST">EST</option>
+            <option value="PST">PST</option>
+            <option value="CET">CET</option>
+            <option value="IST">IST</option>
+          </select>
+        </div>
+        <button onclick="convertToWorldTime()">Convert</button>
+        <p id="convertedWorldTime"></p>
+      </div>
+
+      <!-- Existing Time Since Event Section -->
       <div class="panel">
         <h3>Time Since Event</h3>
         <div class="form-group">
@@ -199,6 +241,7 @@
         <p id="timeSinceEvent"></p>
       </div>
 
+      <!-- Existing Countdown Section -->
       <div class="panel">
         <h3>Countdown to Event</h3>
         <div class="form-group">
@@ -254,6 +297,40 @@
         link.href = URL.createObjectURL(blob);
         link.download = 'conversion-result.txt';
         link.click();
+      }
+
+      // Add Custom Time Unit Function
+      function addCustomUnit() {
+        const customUnitName = document.getElementById('customUnitName').value;
+        const customUnitFactor = document.getElementById('customUnitFactor').value;
+
+        if (customUnitName && customUnitFactor) {
+          const listItem = document.createElement('li');
+          listItem.textContent = `${customUnitName} = ${customUnitFactor} seconds`;
+          document.getElementById('customUnitsList').appendChild(listItem);
+        }
+      }
+
+      // Convert Time to World Time (Sample Logic)
+      function convertToWorldTime() {
+        const timeValue = document.getElementById('worldTimeValue').value;
+        const timeZone = document.getElementById('worldTimeZone').value;
+
+        // Here you can implement more complex logic based on the time zone.
+        // For simplicity, I'm adding a sample conversion.
+        const timeZones = {
+          GMT: 0,
+          EST: -5,
+          PST: -8,
+          CET: 1,
+          IST: 5.5
+        };
+
+        const currentTime = new Date();
+        const timeOffset = timeZones[timeZone];
+        currentTime.setHours(currentTime.getHours() + timeOffset);
+
+        document.getElementById('convertedWorldTime').textContent = `Converted time in ${timeZone}: ${currentTime.toLocaleTimeString()}`;
       }
 
       // Add/Subtract Time Logic
