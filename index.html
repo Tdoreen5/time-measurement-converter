@@ -215,6 +215,20 @@
     </div>
 
     <script>
+      // Register Service Worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/service-worker.js')
+            .then((registration) => {
+              console.log('Service Worker registered with scope:', registration.scope);
+            })
+            .catch((error) => {
+              console.log('Service Worker registration failed:', error);
+            });
+        });
+      }
+
       let isDarkTheme = false;
 
       function toggleTheme() {
@@ -242,133 +256,82 @@
         };
 
         // Convert input value to seconds
-        const timeInSeconds = timeValue * conversionFactors[fromUnit];
+        const valueInSeconds = timeValue * conversionFactors[fromUnit];
 
-        // Convert seconds to target unit
-        result = timeInSeconds / conversionFactors[toUnit];
+        // Convert from seconds to target unit
+        result = valueInSeconds / conversionFactors[toUnit];
 
         // Display result
-        document.getElementById('result').textContent = result + ' ' + toUnit;
-        document.getElementById('downloadBtn').style.display = 'inline';
-
-        // Save conversion to history
-        const conversionHistory = JSON.parse(localStorage.getItem('conversionHistory')) || [];
-        const conversion = {
-          timeValue,
-          fromUnit,
-          toUnit,
-          result,
-          date: new Date().toLocaleString(),
-        };
-        conversionHistory.push(conversion);
-        localStorage.setItem('conversionHistory', JSON.stringify(conversionHistory));
+        document.getElementById('result').textContent = `${timeValue} ${fromUnit} is equal to ${result.toFixed(4)} ${toUnit}`;
       }
 
-      // Download result as a text file
       function downloadResult() {
-        const result = document.getElementById('result').textContent;
-        const blob = new Blob([result], { type: 'text/plain' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'conversion_result.txt';
-        link.click();
+        const resultText = document.getElementById('result').textContent;
+        const blob = new Blob([resultText], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'conversion_result.txt';
+        a.click();
+        URL.revokeObjectURL(url);
       }
 
-      // Convert to world time (simple logic for demo)
       function convertToWorldTime() {
-        const worldTimeValue = document.getElementById('worldTimeValue').value;
-        const worldTimeZone = document.getElementById('worldTimeZone').value;
-
-        if (!worldTimeValue) {
-          document.getElementById('convertedWorldTime').textContent = "Please enter a valid time.";
-          return;
-        }
-
-        // Get the selected date and time from the input (datetime-local gives a proper format)
-        const currentDate = new Date(worldTimeValue);
-
-        // Map of time zones to UTC offset in minutes
-        const timeZoneOffsets = {
-          GMT: 0,
-          EST: -5 * 60,
-          PST: -8 * 60,
-          CET: 1 * 60,
-          IST: 5.5 * 60,
-          AEST: 10 * 60,
-          JST: 9 * 60,
-          UTC: 0
-        };
-
-        // Get the offset for the selected time zone
-        const offset = timeZoneOffsets[worldTimeZone];
-
-        // Adjust the current date by the offset (convert to the target time zone)
-        const adjustedDate = new Date(currentDate.getTime() + offset * 60000);
-
-        // Format the converted date into a readable string
-        const options = {
-          weekday: 'long',
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: 'numeric',
-          minute: 'numeric',
-          second: 'numeric',
-          timeZoneName: 'short'
-        };
-
-        const formattedDate = new Intl.DateTimeFormat('en-US', options).format(adjustedDate);
-
-        // Display the result
-        document.getElementById('convertedWorldTime').textContent = `Converted Time: ${formattedDate}`;
+        const timeValue = document.getElementById('worldTimeValue').value;
+        const timeZone = document.getElementById('worldTimeZone').value;
+        const convertedTime = new Date(timeValue).toLocaleString('en-US', {
+          timeZone: timeZone,
+        });
+        document.getElementById('convertedWorldTime').textContent =
+          'Converted Time: ' + convertedTime;
       }
 
-      // Time since event logic
       function calculateTimeSinceEvent() {
-        const eventDate = document.getElementById('eventDate').value;
-        const eventUnit = document.getElementById('eventUnit').value;
-
-        const eventDateObj = new Date(eventDate);
+        const eventDate = new Date(document.getElementById('eventDate').value);
         const currentDate = new Date();
-        const timeDifference = currentDate - eventDateObj;
+        const timeDifference = currentDate - eventDate;
+        const unit = document.getElementById('eventUnit').value;
+        let timeSinceEvent;
 
-        const unitsInMilliseconds = {
-          seconds: 1000,
-          minutes: 1000 * 60,
-          hours: 1000 * 60 * 60,
-          days: 1000 * 60 * 60 * 24,
-          months: 1000 * 60 * 60 * 24 * 30, // approx month
-          years: 1000 * 60 * 60 * 24 * 365, // approx year
-        };
-
-        const timeDifferenceInUnit = timeDifference / unitsInMilliseconds[eventUnit];
-
-        document.getElementById('timeSinceEvent').textContent = `${Math.floor(timeDifferenceInUnit)} ${eventUnit} ago`;
+        switch (unit) {
+          case 'seconds':
+            timeSinceEvent = Math.floor(timeDifference / 1000);
+            break;
+          case 'minutes':
+            timeSinceEvent = Math.floor(timeDifference / 60000);
+            break;
+          case 'hours':
+            timeSinceEvent = Math.floor(timeDifference / 3600000);
+            break;
+          case 'days':
+            timeSinceEvent = Math.floor(timeDifference / 86400000);
+            break;
+          case 'months':
+            timeSinceEvent = Math.floor(timeDifference / 2592000000);
+            break;
+          case 'years':
+            timeSinceEvent = Math.floor(timeDifference / 31536000000);
+            break;
+        }
+        document.getElementById('timeSinceEvent').textContent = `Time since event: ${timeSinceEvent} ${unit}`;
       }
 
-      // Countdown logic
       function countdownToEvent() {
-        const eventDate = document.getElementById('eventDateCountdown').value;
-        const eventDateObj = new Date(eventDate);
-        const currentDate = new Date();
-        const timeDifference = eventDateObj - currentDate;
-
-        if (timeDifference <= 0) {
-          document.getElementById('countdown').textContent = 'Event has passed!';
-        } else {
-          setInterval(function () {
-            const now = new Date();
-            const timeRemaining = eventDateObj - now;
-
-            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-
-            document.getElementById('countdown').textContent =
-              days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's';
-          }, 1000);
-        }
+        const eventDate = new Date(document.getElementById('eventDateCountdown').value);
+        const countdownInterval = setInterval(() => {
+          const currentDate = new Date();
+          const timeRemaining = eventDate - currentDate;
+          if (timeRemaining <= 0) {
+            clearInterval(countdownInterval);
+            document.getElementById('countdown').textContent = 'Event has occurred!';
+          } else {
+            const days = Math.floor(timeRemaining / 86400000);
+            const hours = Math.floor((timeRemaining % 86400000) / 3600000);
+            const minutes = Math.floor((timeRemaining % 3600000) / 60000);
+            const seconds = Math.floor((timeRemaining % 60000) / 1000);
+            document.getElementById('countdown').textContent = `Countdown: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+          }
+        }, 1000);
       }
     </script>
   </body>
