@@ -4,12 +4,13 @@ const ASSETS_TO_CACHE = [
   "/", // Adjust this if your app is served from a subdirectory
   "/index.html",
   "/styles.css",
-  "/script.js", // Add your JavaScript file here if it's not already cached
+  //"/script.js", Add your JavaScript file here if it's not already cached
   "/service-worker.js",
   "/manifest.json", // Include the manifest.json for PWA functionality
-  "/images/icon-192x192.png", // Icon for the app
-  "/images/icon-512x512.png", // Larger icon for various screens
-  "/images/badge.png", // Badge for notifications (if you have one)
+  "/history.html"
+  //"/images/icon-192x192.png", Icon for the app
+  //"/images/icon-512x512.png", Larger icon for various screens
+  //"/images/badge.png", Badge for notifications (if you have one)
   // Add any other assets that need to be cached for offline use
 ];
 
@@ -64,8 +65,8 @@ self.addEventListener("push", (event) => {
   let notificationTitle = "Time Measurement Converter";
   let notificationOptions = {
     body: event.data ? event.data.text() : "You have a new notification!",
-    icon: "/images/icon-192x192.png", // Set the icon for the notification
-    badge: "/images/badge.png", // Optional: Set a badge for the notification
+    //icon: "/images/icon-192x192.png", Set the icon for the notification
+    //badge: "/images/badge.png", Optional: Set a badge for the notification
   };
 
   // Show the notification

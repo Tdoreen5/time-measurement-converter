@@ -1,93 +1,93 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" href="https://c.s-microsoft.com/favicon.ico?v2" />
-    <link rel="manifest" href="/manifest.json" />
-    <link rel="stylesheet" href="styles.css" />
-    <title>Conversion History</title>
-    <style>
-      body {
-        background-color: #ffffff;
-        color: #000000;
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-      }
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <link rel="shortcut icon" href="https://c.s-microsoft.com/favicon.ico?v2" />
+      <link rel="manifest" href="/manifest.json" />
+      <link rel="stylesheet" href="styles.css" />
+      <title>Conversion History</title>
+      <style>
+        body {
+          background-color: #ffffff;
+          color: #000000;
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+        }
 
-      .container {
-        padding: 20px;
-        max-width: 800px;
-        margin: auto;
-      }
+        .container {
+          padding: 20px;
+          max-width: 800px;
+          margin: auto;
+        }
 
-      h1 {
-        text-align: center;
-      }
+        h1 {
+          text-align: center;
+        }
 
-      .history-item {
-        border: 1px solid #ccc;
-        padding: 15px;
-        margin-bottom: 10px;
-        border-radius: 8px;
-      }
+        .history-item {
+          border: 1px solid #ccc;
+          padding: 15px;
+          margin-bottom: 10px;
+          border-radius: 8px;
+        }
 
-      .history-item p {
-        margin: 5px 0;
-      }
+        .history-item p {
+          margin: 5px 0;
+        }
 
-      .history-item strong {
-        font-weight: bold;
-      }
+        .history-item strong {
+          font-weight: bold;
+        }
 
-      .back-btn {
-        display: block;
-        text-align: center;
-        margin-top: 30px;
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: white;
-        border-radius: 5px;
-        text-decoration: none;
-        font-size: 16px;
-      }
+        .back-btn {
+          display: block;
+          text-align: center;
+          margin-top: 30px;
+          padding: 10px 20px;
+          background-color: #007bff;
+          color: white;
+          border-radius: 5px;
+          text-decoration: none;
+          font-size: 16px;
+        }
 
-      .back-btn:hover {
-        background-color: #0056b3;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>Conversion History</h1>
+        .back-btn:hover {
+          background-color: #0056b3;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1>Conversion History</h1>
 
-      <div id="historyContainer">
-        <!-- Conversion history items will be dynamically loaded here -->
+        <div id="historyContainer">
+          <!-- Conversion history items will be dynamically loaded here -->
+        </div>
+
+        <a href="index.html" class="back-btn">Back to Converter</a>
       </div>
 
-      <a href="index.html" class="back-btn">Back to Converter</a>
-    </div>
+      <script>
+        window.onload = function () {
+          const conversionHistory = JSON.parse(localStorage.getItem('conversionHistory')) || [];
+          const historyContainer = document.getElementById('historyContainer');
 
-    <script>
-      window.onload = function () {
-        const conversionHistory = JSON.parse(localStorage.getItem('conversionHistory')) || [];
-        const historyContainer = document.getElementById('historyContainer');
-
-        if (conversionHistory.length === 0) {
-          historyContainer.innerHTML = "<p>No conversions found.</p>";
-        } else {
-          conversionHistory.forEach((conversion) => {
-            const historyItem = document.createElement('div');
-            historyItem.className = 'history-item';
-            historyItem.innerHTML = `
-              <p><strong>${conversion.date}</strong></p>
-              <p>Converted ${conversion.timeValue} ${conversion.fromUnit} to ${conversion.result} ${conversion.toUnit}</p>
-            `;
-            historyContainer.appendChild(historyItem);
-          });
-        }
-      };
-    </script>
-  </body>
-</html>
+          if (conversionHistory.length === 0) {
+            historyContainer.innerHTML = "<p>No conversions found.</p>";
+          } else {
+            conversionHistory.forEach((conversion) => {
+              const historyItem = document.createElement('div');
+              historyItem.className = 'history-item';
+              historyItem.innerHTML = `
+                <p><strong>${conversion.date}</strong></p>
+                <p>Converted ${conversion.timeValue} ${conversion.fromUnit} to ${conversion.result} ${conversion.toUnit}</p>
+              `;
+              historyContainer.appendChild(historyItem);
+            });
+          }
+        };
+      </script>
+    </body>
+  </html>
