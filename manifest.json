@@ -2,7 +2,7 @@
   "name": "Time Measurement Converter",
   "short_name": "Time Converter",
   "description": "Convert time between hours, minutes, and seconds.",
-  "start_url": "/",
+  "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#4CAF50",
@@ -26,7 +26,5 @@
   "scope": "/",
   "orientation": "any",
   "lang": "en-US",
-  "prefer_related_applications": false,
-  "background_color": "#ffffff",
-  "theme_color": "#4CAF50"
+  "prefer_related_applications": false
 }
