@@ -1,108 +1,112 @@
-<html lang="en-US" dir="ltr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" href="https://c.s-microsoft.com/favicon.ico?v2" />
-    <link rel="manifest" href="/manifest.json" />
-    <link rel="stylesheet" href="styles.css" />
-    <title>Time Measurement Converter</title>
-    <style>
-      /* Your existing styles are retained */
-      :root {
-        --bg-color: #ffffff;
-        --text-color: #000000;
-        --button-bg: #007bff;
-        --button-text: #ffffff;
-      }
+<!DOCTYPE html>
+  <html lang="en-US" dir="ltr">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <link rel="shortcut icon" href="https://c.s-microsoft.com/favicon.ico?v2" />
+      <link rel="manifest" href="/manifest.json" />
+      <link rel="stylesheet" href="styles.css" />
+      <title>Time Measurement Converter</title>
+      <style>
+        /* Your existing styles are retained */
+        :root {
+          --bg-color: #ffffff;
+          --text-color: #000000;
+          --button-bg: #007bff;
+          --button-text: #ffffff;
+        }
 
-      [data-theme="dark"] {
-        --bg-color: #121212;
-        --text-color: #ffffff;
-        --button-bg: #0d6efd;
-        --button-text: #ffffff;
-      }
+        [data-theme="dark"] {
+          --bg-color: #121212;
+          --text-color: #ffffff;
+          --button-bg: #0d6efd;
+          --button-text: #ffffff;
+        }
 
-      body {
-        background-color: var(--bg-color);
-        color: var(--text-color);
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-      }
+        body {
+          background-color: var(--bg-color);
+          color: var(--text-color);
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+        }
 
-      .container {
-        padding: 20px;
-        max-width: 600px;
-        margin: auto;
-      }
+        .container {
+          padding: 20px;
+          max-width: 600px;
+          margin: auto;
+        }
 
-      button {
-        background-color: var(--button-bg);
-        color: var(--button-text);
-        border: none;
-        padding: 10px 20px;
-        cursor: pointer;
-        border-radius: 5px;
-        font-size: 16px;
-      }
+        button {
+          background-color: var(--button-bg);
+          color: var(--button-text);
+          border: none;
+          padding: 10px 20px;
+          cursor: pointer;
+          border-radius: 5px;
+          font-size: 16px;
+        }
 
-      button:hover {
-        opacity: 0.9;
-      }
+        button:hover {
+          opacity: 0.9;
+        }
 
-      .theme-toggle {
-        float: right;
-        margin-top: -40px;
-      }
+        .theme-toggle {
+          float: right;
+          margin-top: -40px;
+        }
 
-      a {
-        display: inline-block;
-        margin: 10px 0;
-        padding: 10px 20px;
-        text-decoration: none;
-        color: var(--button-text);
-        background-color: var(--button-bg);
-        border-radius: 5px;
-        font-size: 16px;
-        text-align: center;
-      }
+        a {
+          display: inline-block;
+          margin: 10px 0;
+          padding: 10px 20px;
+          text-decoration: none;
+          color: var(--button-text);
+          background-color: var(--button-bg);
+          border-radius: 5px;
+          font-size: 16px;
+          text-align: center;
+        }
 
-      a:hover {
-        opacity: 0.9;
-      }
+        a:hover {
+          opacity: 0.9;
+        }
 
-      .form-group {
-        margin-bottom: 20px;
-      }
+        .form-group {
+          margin-bottom: 20px;
+        }
 
-      label {
-        font-weight: bold;
-        display: block;
-        margin-bottom: 8px;
-      }
+        label {
+          font-weight: bold;
+          display: block;
+          margin-bottom: 8px;
+        }
 
-      input,
-      select {
-        width: 100%;
-        padding: 10px;
-        font-size: 16px;
-        margin-top: 5px;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        box-sizing: border-box;
-      }
+        input,
+        select {
+          width: 100%;
+          padding: 10px;
+          font-size: 16px;
+          margin-top: 5px;
+          border-radius: 8px;
+          border: 1px solid #ccc;
+          box-sizing: border-box;
+        }
 
-      .panel {
-        margin-top: 30px;
-      }
+        .panel {
+          margin-top: 30px;
+        }
 
-      .countdown {
-        margin-top: 20px;
-        font-size: 18px;
-        font-weight: bold;
-      }
-    </style>
-  </head>
+        .countdown {
+          margin-top: 20px;
+          font-size: 18px;
+          font-weight: bold;
+        }
+      </style>
+    </head>
+
+
+<!--Start of Body-->
   <body>
     <div class="container">
       <h1>Time Measurement Converter</h1>
@@ -333,11 +337,5 @@
         }, 1000);
       }
     </script>
-
-<script>
-  if('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js', { scope: '/' });
-  }
-  </script>
   </body>
 </html>
